@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.liewmanchoi</groupId>
+  <artifactId>PigeonPush</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>PigeonPush</name>
+  <description>Scaled message push service framework.可扩展消息推送服务框架</description>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <java.version>1.8</java.version>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <junit.version>4.12</junit.version>
+    <netty.version>4.1.36.Final</netty.version>
+    <logback.version>1.0.13</logback.version>
+    <swagger.version>2.5.0</swagger.version>
+    <lombok.version>1.18.8</lombok.version>
+    <curator.version>4.2.0</curator.version>
+    <guava.version>28.0-jre</guava.version>
+    <protostuff.version>1.5.9</protostuff.version>
+    <objenesis.version>3.0.1</objenesis.version>
+  </properties>
+
+  <modules>
+    <module>pigeonpush-sdk</module>
+    <module>pigeonpush-server</module>
+    <module>pigeonpush-reglog</module>
+    <module>pigeonpush-delivery</module>
+    <module>pigeonpush-notification</module>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${lombok.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-all</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.curator</groupId>
+        <artifactId>curator-framework</artifactId>
+        <version>${curator.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.curator</groupId>
+        <artifactId>curator-recipes</artifactId>
+        <version>${curator.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.protostuff</groupId>
+        <artifactId>protostuff-core</artifactId>
+        <version>${protostuff.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.protostuff</groupId>
+        <artifactId>protostuff-runtime</artifactId>
+        <version>${protostuff.version}</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/org.objenesis/objenesis -->
+      <dependency>
+        <groupId>org.objenesis</groupId>
+        <artifactId>objenesis</artifactId>
+        <version>${objenesis.version}</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guava.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+    </dependency>
+  </dependencies>
+</project>
