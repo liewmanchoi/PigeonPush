@@ -1,33 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-
-  <groupId>com.liewmanchoi</groupId>
   <artifactId>PigeonPush</artifactId>
-  <packaging>pom</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <name>PigeonPush</name>
+
+  <dependencies>
+    <dependency>
+      <artifactId>junit</artifactId>
+      <groupId>junit</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>lombok</artifactId>
+      <groupId>org.projectlombok</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>spring-boot-starter-logging</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+  </dependencies>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <artifactId>junit</artifactId>
+        <groupId>junit</groupId>
+        <scope>test</scope>
+        <version>${junit.version}</version>
+      </dependency>
+      <dependency>
+        <artifactId>lombok</artifactId>
+        <groupId>org.projectlombok</groupId>
+        <scope>provided</scope>
+        <version>${lombok.version}</version>
+      </dependency>
+      <dependency>
+        <artifactId>netty-all</artifactId>
+        <groupId>io.netty</groupId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <artifactId>curator-framework</artifactId>
+        <groupId>org.apache.curator</groupId>
+        <version>${curator.version}</version>
+      </dependency>
+      <dependency>
+        <artifactId>curator-recipes</artifactId>
+        <groupId>org.apache.curator</groupId>
+        <version>${curator.version}</version>
+      </dependency>
+      <dependency>
+        <artifactId>protostuff-core</artifactId>
+        <groupId>io.protostuff</groupId>
+        <version>${protostuff.version}</version>
+      </dependency>
+      <dependency>
+        <artifactId>protostuff-runtime</artifactId>
+        <groupId>io.protostuff</groupId>
+        <version>${protostuff.version}</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/org.objenesis/objenesis -->
+      <dependency>
+        <artifactId>objenesis</artifactId>
+        <groupId>org.objenesis</groupId>
+        <version>${objenesis.version}</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+      <dependency>
+        <artifactId>guava</artifactId>
+        <groupId>com.google.guava</groupId>
+        <version>${guava.version}</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
+      <dependency>
+        <artifactId>okhttp</artifactId>
+        <groupId>com.squareup.okhttp3</groupId>
+        <version>${okhttp.version}</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+      <dependency>
+        <artifactId>gson</artifactId>
+        <groupId>com.google.code.gson</groupId>
+        <version>${gson.version}</version>
+      </dependency>
+      <dependency>
+        <artifactId>spring-boot-starter-logging</artifactId>
+        <groupId>org.springframework.boot</groupId>
+        <version>${springboot.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <description>Scaled message push service framework.可扩展消息推送服务框架</description>
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <java.version>1.8</java.version>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-    <junit.version>4.12</junit.version>
-    <netty.version>4.1.36.Final</netty.version>
-    <logback.version>1.0.13</logback.version>
-    <swagger.version>2.5.0</swagger.version>
-    <lombok.version>1.18.8</lombok.version>
-    <curator.version>4.2.0</curator.version>
-    <guava.version>28.0-jre</guava.version>
-    <protostuff.version>1.5.9</protostuff.version>
-    <objenesis.version>3.0.1</objenesis.version>
-  </properties>
-
+  <groupId>com.liewmanchoi</groupId>
+  <modelVersion>4.0.0</modelVersion>
   <modules>
     <module>pigeonpush-sdk</module>
     <module>pigeonpush-server</module>
@@ -36,68 +99,29 @@
     <module>pigeonpush-notification</module>
   </modules>
 
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <version>${lombok.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>io.netty</groupId>
-        <artifactId>netty-all</artifactId>
-        <version>${netty.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.curator</groupId>
-        <artifactId>curator-framework</artifactId>
-        <version>${curator.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.curator</groupId>
-        <artifactId>curator-recipes</artifactId>
-        <version>${curator.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.protostuff</groupId>
-        <artifactId>protostuff-core</artifactId>
-        <version>${protostuff.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.protostuff</groupId>
-        <artifactId>protostuff-runtime</artifactId>
-        <version>${protostuff.version}</version>
-      </dependency>
-      <!-- https://mvnrepository.com/artifact/org.objenesis/objenesis -->
-      <dependency>
-        <groupId>org.objenesis</groupId>
-        <artifactId>objenesis</artifactId>
-        <version>${objenesis.version}</version>
-      </dependency>
-      <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
-      <dependency>
-        <groupId>com.google.guava</groupId>
-        <artifactId>guava</artifactId>
-        <version>${guava.version}</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+  <name>PigeonPush</name>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-    </dependency>
-  </dependencies>
+  <packaging>pom</packaging>
+
+  <properties>
+    <curator.version>4.2.0</curator.version>
+    <gson.version>2.8.5</gson.version>
+    <guava.version>28.0-jre</guava.version>
+    <java.version>1.8</java.version>
+    <junit.version>4.12</junit.version>
+    <logback.version>1.0.13</logback.version>
+    <lombok.version>1.18.8</lombok.version>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <netty.version>4.1.36.Final</netty.version>
+    <objenesis.version>3.0.1</objenesis.version>
+    <okhttp.version>3.14.2</okhttp.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <protostuff.version>1.5.9</protostuff.version>
+    <springboot.version>2.1.3.RELEASE</springboot.version>
+    <swagger.version>2.5.0</swagger.version>
+  </properties>
+
+  <version>1.0-SNAPSHOT</version>
 </project>
