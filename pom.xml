@@ -97,6 +97,7 @@
     <module>pigeonpush-reglog</module>
     <module>pigeonpush-delivery</module>
     <module>pigeonpush-notification</module>
+    <module>pigeonpush-common</module>
   </modules>
 
   <name>PigeonPush</name>
