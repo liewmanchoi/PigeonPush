@@ -54,6 +54,26 @@
 
   <name>common</name>
 
+  <dependencies>
+    <dependency>
+      <artifactId>protostuff-core</artifactId>
+      <groupId>io.protostuff</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>protostuff-runtime</artifactId>
+      <groupId>io.protostuff</groupId>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.objenesis/objenesis -->
+    <dependency>
+      <artifactId>objenesis</artifactId>
+      <groupId>org.objenesis</groupId>
+    </dependency>
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-all</artifactId>
+    </dependency>
+  </dependencies>
+
   <parent>
     <artifactId>PigeonPush</artifactId>
     <groupId>com.liewmanchoi</groupId>

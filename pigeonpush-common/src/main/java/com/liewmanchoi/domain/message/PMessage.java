@@ -1,9 +1,9 @@
 package com.liewmanchoi.domain.message;
 
+import io.netty.util.Recycler;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * 推送消息/ACK/PING
@@ -12,27 +12,26 @@ import lombok.NoArgsConstructor;
  * @date 2019/7/9
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@ToString
 public class PMessage implements Serializable {
-
   private static final long serialVersionUID = -4676901532250471660L;
-
+  @ToString.Exclude private final transient Recycler.Handle<PMessage> handle;
   private Integer messageId;
   private Integer clientId;
   private String text;
 
-  public static boolean isValid(PMessage message) {
-    return message.getMessageId() != null || message.getClientId() != null;
+  public PMessage(Recycler.Handle<PMessage> handle) {
+    this.handle = handle;
   }
 
-  public static boolean isPING(PMessage message) {
-    if (!isValid(message)) {
-      return false;
-    }
+  public static boolean isValid(PMessage message) {
+    return message.getMessageId() != null && message.getClientId() != null;
+  }
 
-    return message.getClientId() != null
-        && message.getMessageId() == null
-        && message.getText() == null;
+  public void recycle() {
+    this.messageId = null;
+    this.clientId = null;
+    this.text = null;
+    handle.recycle(this);
   }
 }
