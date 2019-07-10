@@ -16,13 +16,13 @@ import lombok.Data;
 @Data
 public class Message implements Serializable {
   private static final long serialVersionUID = 2037446596875616637L;
-  private static final byte PING = 1;
-  private static final byte PONG = 1 << 1;
-  private static final byte ACK = 1 << 2;
-  private static final byte PUSH = 1 << 3;
-  private static final byte AUTH_REQ = 1 << 4;
-  private static final byte AUTH_RES = 1 << 5;
-  private final transient Recycler.Handle<Message> handle;
+  public static final byte PING = 1;
+  public static final byte PONG = 1 << 1;
+  public static final byte ACK = 1 << 2;
+  public static final byte PUSH = 1 << 3;
+  public static final byte AUTH_REQ = 1 << 4;
+  public static final byte AUTH_RES = 1 << 5;
+  public final transient Recycler.Handle<Message> handle;
   /** 推送消息主体部分 */
   PushMessage pushMessage;
   /** 消息类型，一共分为PUSH/ACK/PING/PONG/AUTH五种 */
@@ -98,6 +98,12 @@ public class Message implements Serializable {
     message.setAttachment(attachment);
 
     return message;
+  }
+
+  public static class AuthState {
+
+    public static final int SUCCESS = 0;
+    public static final int FAILURE = -1;
   }
 
   public void recycle() {

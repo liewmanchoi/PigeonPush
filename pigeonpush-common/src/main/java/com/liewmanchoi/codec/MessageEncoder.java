@@ -5,6 +5,7 @@ import com.liewmanchoi.serialize.ProtostuffSerializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2019/7/9
  */
 @Slf4j
+@AllArgsConstructor
 public class MessageEncoder extends MessageToByteEncoder {
   private ProtostuffSerializer serializer;
 
