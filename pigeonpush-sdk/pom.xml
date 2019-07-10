@@ -59,6 +59,20 @@
       <artifactId>okhttp</artifactId>
       <groupId>com.squareup.okhttp3</groupId>
     </dependency>
+    <dependency>
+      <artifactId>fastjson</artifactId>
+      <groupId>com.alibaba</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>pigeonpush-common</artifactId>
+      <groupId>com.liewmanchoi</groupId>
+      <scope>compile</scope>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <artifactId>guava</artifactId>
+      <groupId>com.google.guava</groupId>
+    </dependency>
   </dependencies>
   <modelVersion>4.0.0</modelVersion>
 

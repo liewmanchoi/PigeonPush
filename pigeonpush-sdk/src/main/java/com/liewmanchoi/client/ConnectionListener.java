@@ -38,7 +38,7 @@ public class ConnectionListener implements ChannelFutureListener {
 
       // 否则，重新发起鉴权，获得新的服务器地址
       loop.schedule(
-          () -> client.authenticateAndConnect(client.getUrl()),
+          () -> client.authenticateAndConnect(),
           NetConstant.REAUTHENTICATE_TIMEOUT,
           TimeUnit.SECONDS);
       log.warn("重新发起鉴权连接...");

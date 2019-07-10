@@ -33,11 +33,19 @@ public class HeartbeatHandler extends ChannelInboundHandlerAdapter {
   }
 
   @Override
+  public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+    // 如果服务端主动从远端关闭连接，也要尝试重连
+    client.doConnect();
+    super.channelInactive(ctx);
+  }
+
+  @Override
   public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
     if (evt instanceof IdleStateEvent) {
       if (count < NetConstant.HEARTBEAT_TIMEOUT_MAX_TIMES) {
         log.warn("SDK在[{}]s内均没有收到数据，主动发送心跳至服务器[{}]", NetConstant.HEARTBEAT_TIMEOUT,
             ctx.channel().remoteAddress());
+        // 发送PING消息
         ctx.writeAndFlush(Message.buildPING(client.getDeviceInfo().getDeviceId()));
         // 递增计数器
         ++count;

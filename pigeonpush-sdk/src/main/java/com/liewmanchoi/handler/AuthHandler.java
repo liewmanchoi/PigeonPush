@@ -1,12 +1,10 @@
 package com.liewmanchoi.handler;
 
 import com.liewmanchoi.client.Client;
-import com.liewmanchoi.constant.NetConstant;
 import com.liewmanchoi.domain.message.Message;
 import com.liewmanchoi.domain.message.Message.AuthState;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -26,6 +24,7 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
     // 成功建立连接，则向推送服务器发送认证请求
     String clientId = client.getDeviceInfo().getDeviceId();
     String token = client.getDeviceInfo().getDeviceToken();
+    // 发送AUTH_REQ握手请求消息
     Message message = Message.buildAuthReq(clientId, token);
 
     log.info("向推送服务器发送认证请求");
@@ -46,7 +45,7 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
       } else {
         // 如果认证失败，则重新请求鉴权服务
         log.error("认证失败，重新请求鉴权");
-        client.authenticateAndConnect(client.getUrl());
+        client.authenticateAndConnect();
       }
     }
 
