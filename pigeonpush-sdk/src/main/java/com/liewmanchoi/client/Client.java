@@ -14,7 +14,7 @@ import com.liewmanchoi.domain.user.DeviceInfo;
 import com.liewmanchoi.exception.ClientException;
 import com.liewmanchoi.exception.ClientException.ErrorEnum;
 import com.liewmanchoi.handler.HeartbeatHandler;
-import com.liewmanchoi.handler.MessageConsumeHandler;
+import com.liewmanchoi.handler.MsgConsumeHandler;
 import com.liewmanchoi.serialize.ProtostuffSerializer;
 import com.liewmanchoi.util.SDKUtil;
 import io.netty.bootstrap.Bootstrap;
@@ -59,7 +59,7 @@ public class Client {
 
   private volatile Bootstrap bootstrap;
   @Getter
-  private DeviceInfo deviceInfo = new DeviceInfo();
+  private DeviceInfo deviceInfo;
   /**
    * 鉴权服务器所在地址
    */
@@ -87,6 +87,7 @@ public class Client {
   }
 
   private void init(String url, MessageProcessor messageProcessor) {
+    deviceInfo = new DeviceInfo();
     String deviceId = SDKUtil.getDeviceId();
     deviceInfo.setDeviceId(deviceId);
     if (deviceId == null) {
@@ -206,7 +207,7 @@ public class Client {
             // 处理心跳监控
             .addLast("HeartbeatHandler", new HeartbeatHandler(Client.this))
             .addLast(
-                "MessageConsumerHandler", new MessageConsumeHandler(Client.this));
+                "MessageConsumerHandler", new MsgConsumeHandler(Client.this));
       }
     };
   }

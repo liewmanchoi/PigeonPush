@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
  * @date 2019/7/10
  */
 @AllArgsConstructor
-public class MessageConsumeHandler extends ChannelInboundHandlerAdapter {
+public class MsgConsumeHandler extends ChannelInboundHandlerAdapter {
 
   private Client client;
 
