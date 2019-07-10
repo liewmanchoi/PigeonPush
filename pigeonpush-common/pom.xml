@@ -3,7 +3,7 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <artifactId>pigeonpush-sdk</artifactId>
+  <artifactId>pigeonpush-common</artifactId>
   <build>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
@@ -50,33 +50,29 @@
     </pluginManagement>
   </build>
 
-  <dependencies>
-    <dependency>
-      <artifactId>netty-all</artifactId>
-      <groupId>io.netty</groupId>
-    </dependency>
-    <dependency>
-      <artifactId>okhttp</artifactId>
-      <groupId>com.squareup.okhttp3</groupId>
-    </dependency>
-    <dependency>
-      <artifactId>fastjson</artifactId>
-      <groupId>com.alibaba</groupId>
-    </dependency>
-    <dependency>
-      <artifactId>pigeonpush-common</artifactId>
-      <groupId>com.liewmanchoi</groupId>
-      <scope>compile</scope>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <artifactId>guava</artifactId>
-      <groupId>com.google.guava</groupId>
-    </dependency>
-  </dependencies>
   <modelVersion>4.0.0</modelVersion>
 
-  <name>sdk</name>
+  <name>common</name>
+
+  <dependencies>
+    <dependency>
+      <artifactId>protostuff-core</artifactId>
+      <groupId>io.protostuff</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>protostuff-runtime</artifactId>
+      <groupId>io.protostuff</groupId>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.objenesis/objenesis -->
+    <dependency>
+      <artifactId>objenesis</artifactId>
+      <groupId>org.objenesis</groupId>
+    </dependency>
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-all</artifactId>
+    </dependency>
+  </dependencies>
 
   <parent>
     <artifactId>PigeonPush</artifactId>
