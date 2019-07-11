@@ -10,8 +10,8 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>pigeonpush-reglog</artifactId>
-  <name>reglog</name>
+  <artifactId>pigeonpush-route</artifactId>
+  <name>route</name>
 
   <build>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
