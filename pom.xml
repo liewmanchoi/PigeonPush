@@ -87,6 +87,25 @@
         <groupId>com.alibaba</groupId>
         <version>${fastjson.version}</version>
       </dependency>
+      <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
+      <dependency>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <groupId>org.springframework.boot</groupId>
+        <scope>test</scope>
+        <version>${springboot.version}</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis -->
+      <dependency>
+        <artifactId>spring-boot-starter-data-redis</artifactId>
+        <groupId>org.springframework.boot</groupId>
+        <version>${springboot.version}</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
+      <dependency>
+        <artifactId>spring-boot-starter-web</artifactId>
+        <groupId>org.springframework.boot</groupId>
+        <version>${springboot.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <description>Scaled message push service framework.可扩展消息推送服务框架</description>
@@ -95,7 +114,7 @@
   <modules>
     <module>pigeonpush-sdk</module>
     <module>pigeonpush-server</module>
-    <module>pigeonpush-reglog</module>
+    <module>pigeonpush-route</module>
     <module>pigeonpush-delivery</module>
     <module>pigeonpush-notification</module>
     <module>pigeonpush-common</module>

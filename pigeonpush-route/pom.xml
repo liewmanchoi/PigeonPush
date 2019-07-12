@@ -13,6 +13,34 @@
   <artifactId>pigeonpush-route</artifactId>
   <name>route</name>
 
+  <dependencies>
+    <dependency>
+      <artifactId>curator-framework</artifactId>
+      <groupId>org.apache.curator</groupId>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+    <dependency>
+      <artifactId>fastjson</artifactId>
+      <groupId>com.alibaba</groupId>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
+    <dependency>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <scope>test</scope>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis -->
+    <dependency>
+      <artifactId>spring-boot-starter-data-redis</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
+    <dependency>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+  </dependencies>
+
   <build>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
