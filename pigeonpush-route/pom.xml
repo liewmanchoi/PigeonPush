@@ -18,6 +18,10 @@
       <artifactId>curator-framework</artifactId>
       <groupId>org.apache.curator</groupId>
     </dependency>
+    <dependency>
+      <artifactId>curator-recipes</artifactId>
+      <groupId>org.apache.curator</groupId>
+    </dependency>
     <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
     <dependency>
       <artifactId>fastjson</artifactId>
