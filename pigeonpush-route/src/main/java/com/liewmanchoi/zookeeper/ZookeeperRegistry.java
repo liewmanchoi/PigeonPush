@@ -1,6 +1,8 @@
 package com.liewmanchoi.zookeeper;
 
 import java.util.function.BiConsumer;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -15,8 +17,10 @@ import org.apache.zookeeper.data.Stat;
  * @date 2019/7/14
  */
 @Slf4j
+@NoArgsConstructor
 public class ZookeeperRegistry {
 
+  @Getter
   private CuratorFramework zkCli;
 
   public void init(
