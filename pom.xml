@@ -106,6 +106,12 @@
         <groupId>org.springframework.boot</groupId>
         <version>${springboot.version}</version>
       </dependency>
+      <dependency>
+        <artifactId>spring-boot-configuration-processor</artifactId>
+        <groupId>org.springframework.boot</groupId>
+        <optional>true</optional>
+        <version>${springboot.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <description>Scaled message push service framework.可扩展消息推送服务框架</description>

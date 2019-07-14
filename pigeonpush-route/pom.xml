@@ -40,6 +40,11 @@
       <groupId>org.springframework.boot</groupId>
     </dependency>
     <dependency>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
       <artifactId>pigeonpush-common</artifactId>
       <groupId>com.liewmanchoi</groupId>
       <scope>compile</scope>

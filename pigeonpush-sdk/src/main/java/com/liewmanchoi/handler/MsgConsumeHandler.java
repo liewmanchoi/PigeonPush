@@ -35,6 +35,13 @@ public class MsgConsumeHandler extends ChannelInboundHandlerAdapter {
 
       // 否则，缓存消息ID，并且调用消息处理方法
       client.putInCache(messageId);
+
+      // 回送消息确认ACK
+      // 直接利用原来的ack
+      String clientId = client.getDeviceInfo().getDeviceId();
+      Message ackMsg = Message.buildACK(clientId, messageId);
+      ctx.writeAndFlush(ackMsg);
+
       // 调用用户自定义的消息处理接口
       client.getMessageProcessor().process(pushMessage);
     }
