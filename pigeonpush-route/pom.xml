@@ -45,6 +45,10 @@
       <optional>true</optional>
     </dependency>
     <dependency>
+      <artifactId>jedis</artifactId>
+      <groupId>redis.clients</groupId>
+    </dependency>
+    <dependency>
       <artifactId>pigeonpush-common</artifactId>
       <groupId>com.liewmanchoi</groupId>
       <scope>compile</scope>

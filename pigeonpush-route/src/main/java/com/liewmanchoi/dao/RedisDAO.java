@@ -20,15 +20,10 @@ public class RedisDAO {
   @Autowired
   private RedisTemplate<String, String> redisTemplate;
 
-  public boolean putToken(String clientId, String token) {
+  public void putToken(String clientId, String token) {
     String key = getKey(clientId);
 
-    if (!redisTemplate.hasKey(key)) {
-      redisTemplate.opsForValue().set(key, token, TOKEN_TIMEOUT, TOKEN_EXPIRED_TIME_UNIT);
-      return true;
-    }
-
-    return false;
+    redisTemplate.opsForValue().set(key, token, TOKEN_TIMEOUT, TOKEN_EXPIRED_TIME_UNIT);
   }
 
   public String getToken(String clientId) {
