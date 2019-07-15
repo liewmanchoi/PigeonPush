@@ -1,6 +1,7 @@
 package com.liewmanchoi.service;
 
 import java.net.InetSocketAddress;
+import java.util.List;
 
 /**
  * @author wangsheng
@@ -13,5 +14,5 @@ public interface LoadBalancer {
    *
    * @return InetSocketAddress
    */
-  InetSocketAddress getPushServerAddress();
+  InetSocketAddress selectPushServer(List<InetSocketAddress> addresses, String key);
 }

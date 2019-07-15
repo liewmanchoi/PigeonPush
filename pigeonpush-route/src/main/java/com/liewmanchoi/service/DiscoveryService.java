@@ -5,9 +5,9 @@ import com.liewmanchoi.constant.ZookeeperConstant;
 import com.liewmanchoi.zookeeper.ZookeeperRegistry;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
@@ -32,7 +32,7 @@ public class DiscoveryService {
   @PostConstruct
   public void init() {
     // 初始化缓存
-    cache = new HashSet<>();
+    cache = ConcurrentHashMap.newKeySet();
 
     // zk客户端初始化
     zookeeperRegistry = new ZookeeperRegistry();
@@ -107,7 +107,7 @@ public class DiscoveryService {
   /**
    * 将子节点事件event转换为InetSocketAddress
    *
-   * @param event 子节点时间
+   * @param path 节点路径
    * @return 服务器socket地址
    */
   private InetSocketAddress toSocketAddress(String path) {
