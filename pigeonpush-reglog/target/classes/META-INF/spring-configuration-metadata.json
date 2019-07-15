@@ -1,0 +1,46 @@
+{
+  "groups": [
+    {
+      "name": "zookeeper",
+      "type": "com.liewmanchoi.config.ZookeeperConfig",
+      "sourceType": "com.liewmanchoi.config.ZookeeperConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "zookeeper.base-sleep-time-ms",
+      "type": "java.lang.Integer",
+      "sourceType": "com.liewmanchoi.config.ZookeeperConfig",
+      "defaultValue": 0
+    },
+    {
+      "name": "zookeeper.connect-string",
+      "type": "java.lang.String",
+      "sourceType": "com.liewmanchoi.config.ZookeeperConfig"
+    },
+    {
+      "name": "zookeeper.connection-timeout-ms",
+      "type": "java.lang.Integer",
+      "sourceType": "com.liewmanchoi.config.ZookeeperConfig",
+      "defaultValue": 0
+    },
+    {
+      "name": "zookeeper.max-retries",
+      "type": "java.lang.Integer",
+      "sourceType": "com.liewmanchoi.config.ZookeeperConfig",
+      "defaultValue": 0
+    },
+    {
+      "name": "zookeeper.namespace",
+      "type": "java.lang.String",
+      "sourceType": "com.liewmanchoi.config.ZookeeperConfig"
+    },
+    {
+      "name": "zookeeper.session-timeout-ms",
+      "type": "java.lang.Integer",
+      "sourceType": "com.liewmanchoi.config.ZookeeperConfig",
+      "defaultValue": 0
+    }
+  ],
+  "hints": []
+}
