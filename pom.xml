@@ -48,6 +48,12 @@
         <version>${curator.version}</version>
       </dependency>
       <dependency>
+        <artifactId>curator-test</artifactId>
+        <groupId>org.apache.curator</groupId>
+        <scope>test</scope>
+        <version>${curator.version}</version>
+      </dependency>
+      <dependency>
         <artifactId>protostuff-core</artifactId>
         <groupId>io.protostuff</groupId>
         <version>${protostuff.version}</version>
@@ -154,7 +160,7 @@
     <protostuff.version>1.5.9</protostuff.version>
     <springboot.version>2.1.3.RELEASE</springboot.version>
     <swagger.version>2.5.0</swagger.version>
-    <jedis.version>3.0.1</jedis.version>
+    <jedis.version>2.9.1</jedis.version>
   </properties>
 
   <version>1.0-SNAPSHOT</version>

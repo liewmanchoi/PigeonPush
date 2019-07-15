@@ -1,0 +1,8 @@
+zookeeper:
+  connect-string: 192.168.29.131.2181, 192.168.29.132:2181, 192.168.29.133:2181
+  namespace: /PigeonPush
+  connection-timeout-ms: 15000
+  session-timeout-ms: 60000
+  base-sleep-time-ms: 3000
+  max-retries: 5
+
