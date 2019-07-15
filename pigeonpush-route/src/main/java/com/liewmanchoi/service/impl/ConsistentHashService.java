@@ -35,6 +35,14 @@ public class ConsistentHashService implements LoadBalancer {
 
   @Override
   public InetSocketAddress selectPushServer(List<InetSocketAddress> addresses, String key) {
+    if (addresses == null || addresses.size() == 0) {
+      return null;
+    }
+
+    if (addresses.size() == 1) {
+      return addresses.get(0);
+    }
+
     processSlots(addresses);
     int hashCode = hash(key);
 
