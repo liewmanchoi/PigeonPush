@@ -3,7 +3,6 @@ package com.liewmanchoi.domain.response;
 import java.io.Serializable;
 import java.util.HashMap;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * HTTP接口响应给请求端的消息体
@@ -14,7 +13,6 @@ import lombok.NoArgsConstructor;
  * @author wangsheng
  * @date 2019/7/9
  */
-@NoArgsConstructor
 @Data
 public class HttpResponse implements Serializable {
   private static final long serialVersionUID = 6320874985319179068L;
@@ -22,6 +20,10 @@ public class HttpResponse implements Serializable {
   public static final class CODE {
     public static final int OK = 200;
     public static final int FAILURE = 500;
+  }
+
+  public HttpResponse() {
+    this.data = new HashMap<>();
   }
 
   /** 响应码 */

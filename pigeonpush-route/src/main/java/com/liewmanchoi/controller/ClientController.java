@@ -44,15 +44,16 @@ public class ClientController {
     if (socketAddress == null) {
       // 如果没有可用的服务器，则设置失败
       response.setCode(CODE.FAILURE);
+      response.getData().put("message", "没有可用的推送服务器");
+    } else {
+      response.setCode(CODE.OK);
+      DeviceInfo deviceInfo = new DeviceInfo();
+      deviceInfo.setDeviceId(deviceId);
+      deviceInfo.setDeviceToken(token);
+      deviceInfo.setServerAddress(socketAddress);
+
+      response.getData().put("entity", deviceInfo);
     }
-
-    DeviceInfo deviceInfo = new DeviceInfo();
-    deviceInfo.setDeviceId(deviceId);
-    deviceInfo.setDeviceToken(token);
-    deviceInfo.setServerAddress(socketAddress);
-
-    response.getData().put("entity", deviceInfo);
-
     return JSON.toJSONString(response);
   }
 }
