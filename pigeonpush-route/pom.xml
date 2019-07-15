@@ -22,6 +22,11 @@
       <artifactId>curator-recipes</artifactId>
       <groupId>org.apache.curator</groupId>
     </dependency>
+    <dependency>
+      <artifactId>curator-test</artifactId>
+      <groupId>org.apache.curator</groupId>
+      <scope>test</scope>
+    </dependency>
     <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
     <dependency>
       <artifactId>fastjson</artifactId>
