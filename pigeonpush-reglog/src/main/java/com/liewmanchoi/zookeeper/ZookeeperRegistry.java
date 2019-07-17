@@ -1,5 +1,6 @@
 package com.liewmanchoi.zookeeper;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.function.BiConsumer;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ import org.apache.zookeeper.data.Stat;
 @NoArgsConstructor
 public class ZookeeperRegistry {
 
+  private CountDownLatch latch = new CountDownLatch(1);
   @Getter
   private CuratorFramework zkCli;
 
@@ -38,7 +40,14 @@ public class ZookeeperRegistry {
             .retryPolicy(new ExponentialBackoffRetry(baseSleepTimeMs, maxRetries))
             .namespace(namespace)
             .build();
-
+    zkCli.start();
+    // 阻塞程序，直至成功建立连接
+    try {
+      latch.await();
+    } catch (InterruptedException e) {
+      log.error("发生中断异常");
+      throw new RuntimeException("发生中断异常");
+    }
     // 添加回调，处理连接事件
     zkCli
         .getConnectionStateListenable()
@@ -47,12 +56,13 @@ public class ZookeeperRegistry {
               switch (newState) {
                 case CONNECTED:
                   log.info("连接zookeeper集群成功");
+                  latch.countDown();
                   break;
                 case RECONNECTED:
                   log.info("重新连接zookeeper集群");
                   break;
                 default:
-                  log.warn("与zookeeper集群的连接发生异常");
+                  log.error("与zookeeper集群的连接发生异常");
                   break;
               }
             });
