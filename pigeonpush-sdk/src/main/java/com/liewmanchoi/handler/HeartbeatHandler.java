@@ -3,6 +3,7 @@ package com.liewmanchoi.handler;
 import com.liewmanchoi.client.Client;
 import com.liewmanchoi.constant.NetConstant;
 import com.liewmanchoi.domain.message.Message;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleStateEvent;
@@ -43,10 +44,12 @@ public class HeartbeatHandler extends ChannelInboundHandlerAdapter {
   public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
     if (evt instanceof IdleStateEvent) {
       if (count < NetConstant.HEARTBEAT_TIMEOUT_MAX_TIMES) {
+        Channel channel = ctx.channel();
         log.warn("SDK在[{}]s内均没有收到数据，主动发送心跳至服务器[{}]", NetConstant.HEARTBEAT_TIMEOUT,
-            ctx.channel().remoteAddress());
+            channel.remoteAddress());
         // 发送PING消息
-        ctx.writeAndFlush(Message.buildPING(client.getDeviceInfo().getDeviceId()));
+        // 消息必须由channel（而不是ctx）来发送，这样才能在pipeline中完整地流转
+        channel.writeAndFlush(Message.buildPING(client.getDeviceInfo().getDeviceId()));
         // 递增计数器
         ++count;
       } else {
