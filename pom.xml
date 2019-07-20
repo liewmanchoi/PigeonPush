@@ -143,6 +143,7 @@
     <module>pigeonpush-delivery</module>
     <module>pigeonpush-notification</module>
     <module>pigeonpush-common</module>
+    <module>pigeonpush-api</module>
   </modules>
 
   <name>PigeonPush</name>
