@@ -72,6 +72,19 @@
       <groupId>io.netty</groupId>
       <artifactId>netty-all</artifactId>
     </dependency>
+    <dependency>
+      <artifactId>curator-framework</artifactId>
+      <groupId>org.apache.curator</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>curator-recipes</artifactId>
+      <groupId>org.apache.curator</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>curator-test</artifactId>
+      <groupId>org.apache.curator</groupId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <parent>
