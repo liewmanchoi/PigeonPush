@@ -23,6 +23,7 @@ public class Message implements Serializable {
   public static final byte AUTH_REQ = 1 << 4;
   public static final byte AUTH_RES = 1 << 5;
   public final transient Recycler.Handle<Message> handle;
+  // TODO: 合并PushMessage至扩展字段
   /** 推送消息主体部分 */
   PushMessage pushMessage;
   /** 消息类型，一共分为PUSH/ACK/PING/PONG/AUTH五种 */
@@ -87,6 +88,9 @@ public class Message implements Serializable {
 
     return message;
   }
+
+  // TODO: 增加getAuthReqToken/getAuthResCode()方法
+  // TODO: 增加checkAuthToken()/checkAuthState()方法
 
   public static Message buildAuthRes(String clientId, int code) {
     Map<String, Object> attachment = new HashMap<>(1);
