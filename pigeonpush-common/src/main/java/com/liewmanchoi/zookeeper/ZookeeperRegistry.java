@@ -1,5 +1,6 @@
 package com.liewmanchoi.zookeeper;
 
+import com.liewmanchoi.constant.ZookeeperConstant;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.BiConsumer;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.framework.state.ConnectionState;
 import org.apache.curator.retry.ExponentialBackoffRetry;
+import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
 
 /**
@@ -22,8 +24,7 @@ import org.apache.zookeeper.data.Stat;
 public class ZookeeperRegistry {
 
   private CountDownLatch latch = new CountDownLatch(1);
-  @Getter
-  private CuratorFramework zkCli;
+  @Getter private CuratorFramework zkCli;
 
   public void init(
       String connectString,
@@ -98,5 +99,24 @@ public class ZookeeperRegistry {
     }
 
     return false;
+  }
+
+  public void register(String socketAddress) {
+    if (zkCli == null || socketAddress == null || socketAddress.length() == 0) {
+      return;
+    }
+
+    String path = ZookeeperConstant.REG_PATH + "/" + socketAddress;
+    try {
+      zkCli
+          .create()
+          .creatingParentContainersIfNeeded()
+          .withMode(CreateMode.EPHEMERAL)
+          .forPath(path);
+      log.info("注册节点[{}]成功", path);
+    } catch (Exception e) {
+      log.error("注册节点[{}]失败", path, e);
+      throw new RuntimeException(String.format("注册节点[%s]失败", path), e);
+    }
   }
 }
