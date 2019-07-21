@@ -45,7 +45,7 @@ public class HeartbeatHandler extends ChannelInboundHandlerAdapter {
     if (evt instanceof IdleStateEvent) {
       if (count < NetConstant.HEARTBEAT_TIMEOUT_MAX_TIMES) {
         Channel channel = ctx.channel();
-        log.warn("SDK在[{}]s内均没有收到数据，主动发送心跳至服务器[{}]", NetConstant.HEARTBEAT_TIMEOUT,
+        log.warn("SDK在[{}]s内均没有收发数据，主动发送心跳至服务器[{}]", NetConstant.HEARTBEAT_TIMEOUT,
             channel.remoteAddress());
         // 发送PING消息
         // 消息必须由channel（而不是ctx）来发送，这样才能在pipeline中完整地流转
