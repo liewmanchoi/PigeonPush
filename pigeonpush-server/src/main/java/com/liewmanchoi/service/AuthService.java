@@ -6,4 +6,5 @@ package com.liewmanchoi.service;
  */
 public interface AuthService {
   boolean checkToken(String clientID, String token);
+  void removeToken(String clientID);
 }

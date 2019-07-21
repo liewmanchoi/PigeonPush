@@ -21,4 +21,9 @@ public class AuthServiceImpl implements AuthService {
 
     return token.equals(redisDAO.getToken(clientID));
   }
+
+  @Override
+  public void removeToken(String clientID) {
+    redisDAO.removeToken(clientID);
+  }
 }

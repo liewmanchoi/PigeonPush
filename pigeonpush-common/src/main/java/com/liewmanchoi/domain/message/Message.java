@@ -89,6 +89,17 @@ public class Message implements Serializable {
     return message;
   }
 
+  /**
+   * 获取AUTH_REQ携带的token
+   */
+  public String getToken() {
+    if (type != AUTH_REQ) {
+      return null;
+    }
+
+    return (String) attachment.get("token");
+  }
+
   // TODO: 增加getAuthReqToken/getAuthResCode()方法
   // TODO: 增加checkAuthToken()/checkAuthState()方法
 
