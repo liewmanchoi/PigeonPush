@@ -4,8 +4,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -24,6 +26,7 @@ public class RedisConfig {
     jedisPoolConfig.setTestOnReturn(true);
 
     JedisConnectionFactory connectionFactory = new JedisConnectionFactory();
+    connectionFactory.setPoolConfig(jedisPoolConfig);
     connectionFactory.setUsePool(true);
     connectionFactory.setHostName("192.168.29.131");
     connectionFactory.setPort(6379);
@@ -32,13 +35,34 @@ public class RedisConfig {
   }
 
   @Bean
-  public RedisTemplate<String, String> redisTemplate() {
-    StringRedisTemplate redisTemplate = new StringRedisTemplate(redisConnectionFactory());
+  public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
+    RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+    redisTemplate.setConnectionFactory(factory);
+
     redisTemplate.setKeySerializer(new StringRedisSerializer());
     redisTemplate.setValueSerializer(new StringRedisSerializer());
+    redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+    redisTemplate.setHashValueSerializer(new StringRedisSerializer());
     redisTemplate.setEnableTransactionSupport(true);
     redisTemplate.afterPropertiesSet();
 
     return redisTemplate;
+  }
+
+  @Bean
+  public ValueOperations<String, Object> valueOperations(
+      RedisTemplate<String, Object> redisTemplate) {
+    return redisTemplate.opsForValue();
+  }
+
+  @Bean
+  public HashOperations<String, String, String> hashOperations(
+      RedisTemplate<String, Object> redisTemplate) {
+    return redisTemplate.opsForHash();
+  }
+
+  @Bean
+  public SetOperations<String, Object> setOperations(RedisTemplate<String, Object> redisTemplate) {
+    return redisTemplate.opsForSet();
   }
 }

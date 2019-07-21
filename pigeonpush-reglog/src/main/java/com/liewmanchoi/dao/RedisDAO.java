@@ -16,38 +16,38 @@ import org.springframework.stereotype.Repository;
 public class RedisDAO {
 
   private final TimeUnit TOKEN_EXPIRED_TIME_UNIT = TimeUnit.HOURS;
-  private final int TOKEN_TIMEOUT = 1;
   @Autowired
   private RedisTemplate<String, String> redisTemplate;
 
   public void putToken(String clientId, String token) {
-    String key = getKey(clientId);
+    String key = generateKey(clientId);
 
+    int TOKEN_TIMEOUT = 1;
     redisTemplate.opsForValue().set(key, token, TOKEN_TIMEOUT, TOKEN_EXPIRED_TIME_UNIT);
   }
 
   public String getToken(String clientId) {
-    String key = getKey(clientId);
+    String key = generateKey(clientId);
     return redisTemplate.opsForValue().get(key);
   }
 
   public void removeToken(String clientId) {
-    String key = getKey(clientId);
+    String key = generateKey(clientId);
     redisTemplate.delete(key);
   }
 
   public boolean containsId(String clientId) {
-    String key = getKey(clientId);
+    String key = generateKey(clientId);
     return redisTemplate.hasKey(key);
   }
 
   public boolean checkToken(String clientId, String token) {
-    String key = getKey(clientId);
+    String key = generateKey(clientId);
 
     return token.equals(redisTemplate.opsForValue().get(key));
   }
 
-  private String getKey(String clientId) {
-    return RedisPrefix.getRedisKey(RedisPrefix.REG_PRE, RedisPrefix.AUTH_PRE, clientId);
+  private String generateKey(String clientId) {
+    return RedisPrefix.getRedisKey(RedisPrefix.AUTH_PRE, clientId);
   }
 }

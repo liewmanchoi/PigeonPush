@@ -24,6 +24,7 @@ public class RedisConfig {
     jedisPoolConfig.setTestOnReturn(true);
 
     JedisConnectionFactory connectionFactory = new JedisConnectionFactory();
+    connectionFactory.setPoolConfig(jedisPoolConfig);
     connectionFactory.setUsePool(true);
     connectionFactory.setHostName("192.168.29.131");
     connectionFactory.setPort(6379);
