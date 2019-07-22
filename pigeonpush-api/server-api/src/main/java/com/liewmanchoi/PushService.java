@@ -14,5 +14,5 @@ public interface PushService {
    *
    * @param messages 待推送的消息列表
    */
-  void pushMessage(List<PushMessage> messages);
+  void pushMessage(PushMessage message);
 }

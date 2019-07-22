@@ -18,7 +18,7 @@ Scaled message push service framework. 可扩展消息推送服务框架
 - 消息表：存储`messageId`与消息体的对应关系
   - 数据结构：散列类型
   - 键：PIGEON:MSG_BODY:`messageId`
-  - 值：`title`: content; `body`: content
+  - 值：`title`: content; `text`: content
 
 ## pigeonpush-sdk模块
 本模块作为客户端SDK使用，内置`okhttp`向route模块发送`HTTP`请求，然后向返回的push-server地址发起`TCP`长连接，主要功能点如下：
