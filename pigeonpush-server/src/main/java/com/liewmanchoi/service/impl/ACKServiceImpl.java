@@ -12,11 +12,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class ACKServiceImpl implements ACKService {
 
-  @Autowired
-  private RedisDAO redisDAO;
+  @Autowired private RedisDAO redisDAO;
 
   @Override
-  public void handleACK(String clientID, int messageID) {
+  public void handleACK(String clientID, Integer messageID) {
+    if (clientID == null || messageID == null) {
+      return;
+    }
+
     redisDAO.removeWaitACK(clientID, messageID);
   }
 }
