@@ -31,8 +31,8 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.AttributeKey;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import lombok.Getter;
@@ -74,7 +74,7 @@ public class Server {
         supportEpoll
             ? new EpollEventLoopGroup(serverConfig.getIoThreads())
             : new NioEventLoopGroup(serverConfig.getIoThreads());
-    channelMap = new HashMap<>(10000);
+    channelMap = new ConcurrentHashMap<>(10000);
 
     ServerBootstrap bootstrap = new ServerBootstrap();
     bootstrap
