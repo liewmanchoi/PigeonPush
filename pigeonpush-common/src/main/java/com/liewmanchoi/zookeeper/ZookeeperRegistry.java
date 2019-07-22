@@ -42,13 +42,6 @@ public class ZookeeperRegistry {
             .namespace(namespace)
             .build();
     zkCli.start();
-    // 阻塞程序，直至成功建立连接
-    try {
-      latch.await();
-    } catch (InterruptedException e) {
-      log.error("发生中断异常");
-      throw new RuntimeException("发生中断异常");
-    }
     // 添加回调，处理连接事件
     zkCli
         .getConnectionStateListenable()
@@ -67,8 +60,13 @@ public class ZookeeperRegistry {
                   break;
               }
             });
-
-    zkCli.start();
+    // 阻塞程序，直至成功建立连接
+    try {
+      latch.await();
+    } catch (InterruptedException e) {
+      log.error("发生中断异常");
+      throw new RuntimeException("发生中断异常");
+    }
   }
 
   /**
