@@ -65,6 +65,14 @@ public class Message implements Serializable {
     return message;
   }
 
+  public Integer getPushMessageID() {
+    if (type != PUSH) {
+      return null;
+    }
+
+    return
+  }
+
   public static Message buildACK(String clientId, int messageId) {
     Map<String, Object> attachment = new HashMap<>(1);
     attachment.put("messageId", messageId);
