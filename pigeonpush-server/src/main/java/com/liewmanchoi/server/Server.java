@@ -184,7 +184,6 @@ public class Server {
       return;
     }
     final String clientID = message.getClientId();
-
     final NioSocketChannel channel = channelMap.get(clientID);
     if (channel == null || !channel.isActive()) {
       // 如果连接状态错误，关闭连接

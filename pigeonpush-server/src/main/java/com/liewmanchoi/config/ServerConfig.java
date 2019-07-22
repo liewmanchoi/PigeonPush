@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "server")
+@ConfigurationProperties(prefix = "push-server")
 public class ServerConfig {
   int port;
   int ioThreads;
