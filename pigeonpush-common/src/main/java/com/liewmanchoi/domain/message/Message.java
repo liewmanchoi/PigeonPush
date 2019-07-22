@@ -77,6 +77,14 @@ public class Message implements Serializable {
     return message;
   }
 
+  public Integer getACKMessageID() {
+    if (type != ACK) {
+      return null;
+    }
+
+    return (Integer) attachment.get("messageId");
+  }
+
   public static Message buildAuthReq(String clientId, String token) {
     Map<String, Object> attachment = new HashMap<>(1);
     attachment.put("token", token);
