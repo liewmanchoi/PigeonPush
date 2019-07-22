@@ -57,6 +57,9 @@ Scaled message push service framework. 可扩展消息推送服务框架
  
  
  ## pigeon-notification消息接入模块
+ 
+ ## 额外事项：
+ // TODO: Message的复用与回收时机
 
 
 ## TODO:
