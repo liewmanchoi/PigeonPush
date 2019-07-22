@@ -1,5 +1,6 @@
 package com.liewmanchoi.service;
 
+import com.liewmanchoi.config.ServerConfig;
 import com.liewmanchoi.config.ZookeeperConfig;
 import com.liewmanchoi.util.IpUtil;
 import com.liewmanchoi.zookeeper.ZookeeperRegistry;
@@ -18,6 +19,7 @@ public class RegisterService {
   private ZookeeperRegistry zookeeperRegistry;
 
   @Autowired private ZookeeperConfig zookeeperConfig;
+  @Autowired private ServerConfig serverConfig;
 
   @PostConstruct
   public void init() {
@@ -33,9 +35,10 @@ public class RegisterService {
   }
 
   public void register() {
-    String address = IpUtil.getLocalAddress().toString();
-    log.info("推送服务器的socket地址为[{}]", address);
+    String address = IpUtil.getLocalAddress().getHostAddress();
+    String socketAddress = address + ":" + serverConfig.getPort();
+    log.info("推送服务器的socket地址为[{}]", socketAddress);
 
-    zookeeperRegistry.register(address);
+    zookeeperRegistry.register(socketAddress);
   }
 }
