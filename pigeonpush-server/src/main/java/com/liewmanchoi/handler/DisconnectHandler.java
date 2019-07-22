@@ -38,6 +38,16 @@ public class DisconnectHandler extends ChannelInboundHandlerAdapter {
   }
 
   @Override
+  public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+    // 连接被对端关闭，则应该直接关闭连接
+    final String clientID = getClientID(ctx);
+    log.warn(">>>   与客户端[{}]的连接被对端关闭   <<<", clientID);
+    shutdownConnection(ctx);
+
+    super.channelInactive(ctx);
+  }
+
+  @Override
   public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
     // 如果发生了异常，直接关闭连接
     final String clientID = getClientID(ctx);
