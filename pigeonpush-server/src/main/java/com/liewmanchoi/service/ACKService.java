@@ -6,5 +6,5 @@ package com.liewmanchoi.service;
  */
 public interface ACKService {
 
-  void handleACK(String clientID, int messageID);
+  void handleACK(String clientID, Integer messageID);
 }
