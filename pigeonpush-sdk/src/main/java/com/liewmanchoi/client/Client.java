@@ -18,6 +18,8 @@ import com.liewmanchoi.handler.MsgConsumeHandler;
 import com.liewmanchoi.serialize.ProtostuffSerializer;
 import com.liewmanchoi.util.SDKUtil;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.channel.AdaptiveRecvByteBufAllocator;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -27,6 +29,7 @@ import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
@@ -108,6 +111,8 @@ public class Client {
         .channel(isEpoll ? EpollSocketChannel.class : NioSocketChannel.class)
         .option(ChannelOption.TCP_NODELAY, true)
         .option(ChannelOption.SO_KEEPALIVE, true)
+        .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+        .option(ChannelOption.RCVBUF_ALLOCATOR, new AdaptiveRecvByteBufAllocator())
         .handler(initPipeline());
   }
 
@@ -182,12 +187,12 @@ public class Client {
         });
   }
 
-  private ChannelInitializer initPipeline() {
-    return new ChannelInitializer() {
+  private ChannelInitializer<SocketChannel> initPipeline() {
+    return new ChannelInitializer<SocketChannel>() {
       @Override
-      protected void initChannel(Channel ch) throws Exception {
+      protected void initChannel(SocketChannel ch) throws Exception {
         ch.pipeline()
-            .addLast("IdleStateHandler", new IdleStateHandler(NetConstant.HEARTBEAT_TIMEOUT, 0, 0))
+            .addLast("IdleStateHandler", new IdleStateHandler(0, 0, NetConstant.HEARTBEAT_TIMEOUT))
             .addLast(
                 "LengthFieldPrepender",
                 new LengthFieldPrepender(

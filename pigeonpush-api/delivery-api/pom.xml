@@ -1,19 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <parent>
-    <artifactId>PigeonPush</artifactId>
-    <groupId>com.liewmanchoi</groupId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
-  <modelVersion>4.0.0</modelVersion>
-
-  <artifactId>pigeonpush-server</artifactId>
-  <name>server</name>
-
-
+  <artifactId>delivery-api</artifactId>
   <build>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
@@ -59,46 +49,14 @@
       </plugins>
     </pluginManagement>
   </build>
-  <dependencies>
-    <dependency>
-      <artifactId>server-api</artifactId>
-      <groupId>com.liewmanchoi</groupId>
-      <scope>compile</scope>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
-    <!-- Dubbo Spring Boot Starter -->
-    <dependency>
-      <groupId>org.apache.dubbo</groupId>
-      <artifactId>dubbo-spring-boot-starter</artifactId>
-      <version>2.7.1</version>
-    </dependency>
 
-    <dependency>
-      <groupId>org.apache.dubbo</groupId>
-      <artifactId>dubbo</artifactId>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter -->
-    <dependency>
-      <artifactId>spring-boot-starter</artifactId>
-      <groupId>org.springframework.boot</groupId>
-    </dependency>
-    <dependency>
-      <artifactId>spring-boot-starter-data-redis</artifactId>
-      <groupId>org.springframework.boot</groupId>
-    </dependency>
-    <dependency>
-      <artifactId>jedis</artifactId>
-      <groupId>redis.clients</groupId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-configuration-processor</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.liewmanchoi</groupId>
-      <artifactId>delivery-api</artifactId>
-      <version>1.0-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-  </dependencies>
+  <modelVersion>4.0.0</modelVersion>
+
+  <name>delivery-api</name>
+
+  <parent>
+    <artifactId>pigeonpush-api</artifactId>
+    <groupId>com.liewmanchoi</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
 </project>

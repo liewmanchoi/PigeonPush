@@ -20,7 +20,11 @@ public class PushMessage implements Serializable {
   private String title;
   private String text;
 
-  public static boolean isValid(PushMessage message) {
-    return message.messageId != null && message.clientId != null;
+  public boolean isValid() {
+    return messageId != null && clientId != null;
+  }
+
+  public boolean bodyIsEmpty() {
+    return title == null || text == null;
   }
 }

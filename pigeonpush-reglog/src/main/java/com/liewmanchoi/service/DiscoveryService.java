@@ -44,6 +44,8 @@ public class DiscoveryService {
         zookeeperConfig.getMaxRetries(),
         zookeeperConfig.getNamespace());
 
+    log.info(">>>   Zookeeper客户端初始化完毕   <<<");
+
     // 添加回调函数，修改缓存
     zookeeperRegistry.discover(
         ZookeeperConstant.REG_PATH,

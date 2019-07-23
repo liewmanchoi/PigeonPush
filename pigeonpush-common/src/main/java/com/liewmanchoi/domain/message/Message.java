@@ -23,8 +23,7 @@ public class Message implements Serializable {
   public static final byte AUTH_REQ = 1 << 4;
   public static final byte AUTH_RES = 1 << 5;
   public final transient Recycler.Handle<Message> handle;
-  /** 推送消息主体部分 */
-  PushMessage pushMessage;
+
   /** 消息类型，一共分为PUSH/ACK/PING/PONG/AUTH五种 */
   private byte type;
 
@@ -56,12 +55,42 @@ public class Message implements Serializable {
     return message;
   }
 
-  public static Message buildPush(String clientId, PushMessage pushMessage) {
+  public static Message buildPush(PushMessage pushMessage) {
     Message message = GlobalRecycler.reuse(Message.class);
     message.setType(Message.PUSH);
+    final String clientId = pushMessage.getClientId();
+
     message.setClientId(clientId);
-    message.setPushMessage(pushMessage);
+
+    Map<String, Object> attachment = new HashMap<>(3);
+    attachment.put("messageId", pushMessage.getMessageId());
+    attachment.put("title", pushMessage.getTitle());
+    attachment.put("text", pushMessage.getText());
+    message.setAttachment(attachment);
+
     return message;
+  }
+
+  public PushMessage getPushMessage() {
+    if (type != PUSH) {
+      return null;
+    }
+
+    PushMessage pushMessage = new PushMessage();
+    pushMessage.setClientId(clientId);
+    pushMessage.setMessageId((Integer) attachment.get("messageId"));
+    pushMessage.setTitle((String) attachment.get("title"));
+    pushMessage.setText((String) attachment.get("text"));
+
+    return pushMessage;
+  }
+
+  public Integer getPushMessageID() {
+    if (type != PUSH) {
+      return null;
+    }
+
+    return (Integer) attachment.get("messageId");
   }
 
   public static Message buildACK(String clientId, int messageId) {
@@ -76,6 +105,14 @@ public class Message implements Serializable {
     return message;
   }
 
+  public Integer getACKMessageID() {
+    if (type != ACK) {
+      return null;
+    }
+
+    return (Integer) attachment.get("messageId");
+  }
+
   public static Message buildAuthReq(String clientId, String token) {
     Map<String, Object> attachment = new HashMap<>(1);
     attachment.put("token", token);
@@ -87,6 +124,20 @@ public class Message implements Serializable {
 
     return message;
   }
+
+  /**
+   * 获取AUTH_REQ携带的token
+   */
+  public String getToken() {
+    if (type != AUTH_REQ) {
+      return null;
+    }
+
+    return (String) attachment.get("token");
+  }
+
+  // TODO: 增加getAuthReqToken/getAuthResCode()方法
+  // TODO: 增加checkAuthToken()/checkAuthState()方法
 
   public static Message buildAuthRes(String clientId, int code) {
     Map<String, Object> attachment = new HashMap<>(1);
@@ -110,7 +161,6 @@ public class Message implements Serializable {
     this.type = 0;
     this.clientId = null;
     this.attachment = null;
-    this.pushMessage = null;
     handle.recycle(this);
   }
 }

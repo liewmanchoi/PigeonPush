@@ -26,5 +26,7 @@ public class MessageEncoder extends MessageToByteEncoder {
     Message message = (Message) msg;
     out.writeBytes(serializer.serialize(message));
     log.info("序列化成功");
+    // 序列化成功之后，应该回收消息
+    message.recycle();
   }
 }

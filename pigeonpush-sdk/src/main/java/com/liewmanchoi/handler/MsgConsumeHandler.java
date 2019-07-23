@@ -40,7 +40,8 @@ public class MsgConsumeHandler extends ChannelInboundHandlerAdapter {
       // 直接利用原来的ack
       String clientId = client.getDeviceInfo().getDeviceId();
       Message ackMsg = Message.buildACK(clientId, messageId);
-      ctx.writeAndFlush(ackMsg);
+      // 必须使用Channel调用writeAndFlush()方法
+      ctx.channel().writeAndFlush(ackMsg);
 
       // 调用用户自定义的消息处理接口
       client.getMessageProcessor().process(pushMessage);
