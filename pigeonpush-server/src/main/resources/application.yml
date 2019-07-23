@@ -13,3 +13,15 @@ zookeeper:
 push-server:
   port: 8793
   ioThreads: 16
+
+dubbo:
+  registry:
+    address: 192.168.29.131:2181, 192.168.29.132:2181, 192.168.29.133:2181
+    protocol: zookeeper
+  scan:
+    base-packages: com.liewmanchoi.service.impl
+  protocol:
+    name: dubbo
+    port: 12345
+  application:
+    name: PushServer-provider

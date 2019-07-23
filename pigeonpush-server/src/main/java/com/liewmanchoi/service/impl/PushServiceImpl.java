@@ -9,16 +9,19 @@ import com.liewmanchoi.service.ACKService;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * @author wangsheng
  * @date 2019/7/20
  */
 @Slf4j
-@com.alibaba.dubbo.config.annotation.Service
+@Component
+@org.apache.dubbo.config.annotation.Service(
+    version = "1.0.0",
+    timeout = 10000,
+    interfaceClass = PushService.class)
 public class PushServiceImpl implements PushService {
-  // TODO: 解决自动注入的问题
-
   @Autowired private Server server;
   @Autowired private ACKService ackService;
   @Autowired private RedisDAO redisDAO;

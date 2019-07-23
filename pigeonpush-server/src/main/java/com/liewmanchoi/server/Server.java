@@ -56,7 +56,10 @@ public class Server {
   @Autowired private AuthService authService;
   @Autowired private ACKService ackService;
   /** 远程调用PullService(delivery模块) */
-  @com.alibaba.dubbo.config.annotation.Reference private PullService pullService;
+  @org.apache.dubbo.config.annotation.Reference(
+      version = "1.0.0",
+      interfaceClass = PullService.class)
+  private PullService pullService;
 
   private EventLoopGroup bossGroup;
   private EventLoopGroup workerGroup;
