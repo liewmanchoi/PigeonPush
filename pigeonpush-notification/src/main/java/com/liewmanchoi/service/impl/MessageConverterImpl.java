@@ -37,7 +37,7 @@ public class MessageConverterImpl implements MessageConverter {
       PushMessage message = new PushMessage();
       message.setMessageId(messageId);
       message.setClientId(clientId);
-      message.setText(title);
+      message.setTitle(title);
       message.setText(text);
 
       messageList.add(message);
