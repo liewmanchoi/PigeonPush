@@ -49,13 +49,13 @@ public class RedisDAO {
   }
 
   /** 查询消息体 */
-  public Map<String, String> getMessageBody(int messageID) {
+  public Map<String, String> getMessageBody(Long messageID) {
     String key = generateKey(RedisPrefix.MSG_PRE, messageID);
     return hashOperations.entries(key);
   }
 
   /** 删除待确认消息表项 */
-  public void removeWaitACK(String clientID, int messageID) {
+  public void removeWaitACK(String clientID, Long messageID) {
     String key = generateKey(RedisPrefix.ACK_PRE, clientID);
     setOperations.remove(key, messageID);
   }

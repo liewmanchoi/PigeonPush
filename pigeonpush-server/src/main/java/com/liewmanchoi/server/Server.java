@@ -144,7 +144,7 @@ public class Server {
     pullService.pullMessage(clientID);
   }
 
-  public void handleACK(String clientID, Integer messageID) {
+  public void handleACK(String clientID, Long messageID) {
     if (clientID == null || messageID == null) {
       return;
     }

@@ -57,6 +57,22 @@ Scaled message push service framework. 可扩展消息推送服务框架
  
  
  ## pigeon-notification消息接入模块
+ 消息接入模块notification是接收外界消息推送指令的接口，提供Restful API供外部调用，主要功能点如下：
+ - web服务器：提供Restful API供外部调用，从而获取需要推送的消息和推送对象
+      - POST /v1/push_message
+      - JSON格式：
+      ```json5
+        {
+          "cid": ["clientID1", "clientID2", "clientID3"],
+          "title": "消息标题",
+          "text": "消息正文"
+        }   
+      ```
+- 消息生产者：
+  - 接收到消息后，使用`snowflake`算法为消息生成唯一的`messageID`
+  - 将JSON字符串转换为一个或多个`PushMessage`对象
+  - 作为消息生产者，将`PushMessage`对象发送给Kafka消息队列
+   
  
  ## 额外事项：
  - 对象池：由于`Message`对象会在系统中频繁创建与销毁，因此使用Netty自带的对象池能够显著提升系统性能，防止垃圾回收带来的STW(stop the world)停顿

@@ -15,13 +15,13 @@ import lombok.Data;
  */
 @Data
 public class Message implements Serializable {
-  private static final long serialVersionUID = 2037446596875616637L;
   public static final byte PING = 1;
   public static final byte PONG = 1 << 1;
   public static final byte ACK = 1 << 2;
   public static final byte PUSH = 1 << 3;
   public static final byte AUTH_REQ = 1 << 4;
   public static final byte AUTH_RES = 1 << 5;
+  private static final long serialVersionUID = 2037446596875616637L;
   public final transient Recycler.Handle<Message> handle;
 
   /** 消息类型，一共分为PUSH/ACK/PING/PONG/AUTH五种 */
@@ -71,29 +71,7 @@ public class Message implements Serializable {
     return message;
   }
 
-  public PushMessage getPushMessage() {
-    if (type != PUSH) {
-      return null;
-    }
-
-    PushMessage pushMessage = new PushMessage();
-    pushMessage.setClientId(clientId);
-    pushMessage.setMessageId((Integer) attachment.get("messageId"));
-    pushMessage.setTitle((String) attachment.get("title"));
-    pushMessage.setText((String) attachment.get("text"));
-
-    return pushMessage;
-  }
-
-  public Integer getPushMessageID() {
-    if (type != PUSH) {
-      return null;
-    }
-
-    return (Integer) attachment.get("messageId");
-  }
-
-  public static Message buildACK(String clientId, int messageId) {
+  public static Message buildACK(String clientId, Long messageId) {
     Map<String, Object> attachment = new HashMap<>(1);
     attachment.put("messageId", messageId);
 
@@ -103,14 +81,6 @@ public class Message implements Serializable {
     message.setAttachment(attachment);
 
     return message;
-  }
-
-  public Integer getACKMessageID() {
-    if (type != ACK) {
-      return null;
-    }
-
-    return (Integer) attachment.get("messageId");
   }
 
   public static Message buildAuthReq(String clientId, String token) {
@@ -125,20 +95,6 @@ public class Message implements Serializable {
     return message;
   }
 
-  /**
-   * 获取AUTH_REQ携带的token
-   */
-  public String getToken() {
-    if (type != AUTH_REQ) {
-      return null;
-    }
-
-    return (String) attachment.get("token");
-  }
-
-  // TODO: 增加getAuthReqToken/getAuthResCode()方法
-  // TODO: 增加checkAuthToken()/checkAuthState()方法
-
   public static Message buildAuthRes(String clientId, int code) {
     Map<String, Object> attachment = new HashMap<>(1);
     attachment.put("code", code);
@@ -151,10 +107,43 @@ public class Message implements Serializable {
     return message;
   }
 
-  public static class AuthState {
+  public PushMessage getPushMessage() {
+    if (type != PUSH) {
+      return null;
+    }
 
-    public static final int SUCCESS = 0;
-    public static final int FAILURE = -1;
+    PushMessage pushMessage = new PushMessage();
+    pushMessage.setClientId(clientId);
+    pushMessage.setMessageId((Long) attachment.get("messageId"));
+    pushMessage.setTitle((String) attachment.get("title"));
+    pushMessage.setText((String) attachment.get("text"));
+
+    return pushMessage;
+  }
+
+  public Long getPushMessageID() {
+    if (type != PUSH) {
+      return null;
+    }
+
+    return (Long) attachment.get("messageId");
+  }
+
+  public Long getACKMessageID() {
+    if (type != ACK) {
+      return null;
+    }
+
+    return (Long) attachment.get("messageId");
+  }
+
+  /** 获取AUTH_REQ携带的token */
+  public String getToken() {
+    if (type != AUTH_REQ) {
+      return null;
+    }
+
+    return (String) attachment.get("token");
   }
 
   public void recycle() {
@@ -162,5 +151,11 @@ public class Message implements Serializable {
     this.clientId = null;
     this.attachment = null;
     handle.recycle(this);
+  }
+
+  public static class AuthState {
+
+    public static final int SUCCESS = 0;
+    public static final int FAILURE = -1;
   }
 }

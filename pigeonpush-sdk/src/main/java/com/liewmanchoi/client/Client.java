@@ -13,8 +13,8 @@ import com.liewmanchoi.domain.response.HttpResponse.CODE;
 import com.liewmanchoi.domain.user.DeviceInfo;
 import com.liewmanchoi.exception.ClientException;
 import com.liewmanchoi.exception.ClientException.ErrorEnum;
+import com.liewmanchoi.handler.ClientMessageHandler;
 import com.liewmanchoi.handler.HeartbeatHandler;
-import com.liewmanchoi.handler.MsgConsumeHandler;
 import com.liewmanchoi.serialize.ProtostuffSerializer;
 import com.liewmanchoi.util.SDKUtil;
 import io.netty.bootstrap.Bootstrap;
@@ -54,29 +54,19 @@ import okhttp3.Response;
 public class Client {
 
   private EventLoopGroup workerGroup;
-  /**
-   * 多线程环境下必须保证可见性
-   */
-  @Getter
-  private volatile Channel futureChannel;
+  /** 多线程环境下必须保证可见性 */
+  @Getter private volatile Channel futureChannel;
 
   private volatile Bootstrap bootstrap;
-  @Getter
-  private DeviceInfo deviceInfo;
-  /**
-   * 鉴权服务器所在地址
-   */
-  @Getter
-  private String url;
+  @Getter private DeviceInfo deviceInfo;
+  /** 鉴权服务器所在地址 */
+  @Getter private String url;
 
-  @Getter
-  private MessageProcessor messageProcessor;
+  @Getter private MessageProcessor messageProcessor;
 
   private ProtostuffSerializer serializer;
-  /**
-   * 最近消息ID缓存，保证消息消费的幂等性
-   */
-  private Cache<Integer, Object> cache =
+  /** 最近消息ID缓存，保证消息消费的幂等性 */
+  private Cache<Long, Object> cache =
       CacheBuilder.newBuilder()
           .initialCapacity(250)
           .maximumSize(250)
@@ -211,8 +201,7 @@ public class Client {
             // 成功建立连接后，ConnectionListener将会在此处添加AuthHandler用于鉴权认证，认证成功后，会自动删除
             // 处理心跳监控
             .addLast("HeartbeatHandler", new HeartbeatHandler(Client.this))
-            .addLast(
-                "MessageConsumerHandler", new MsgConsumeHandler(Client.this));
+            .addLast("ClientMessageHandler", new ClientMessageHandler(Client.this));
       }
     };
   }
@@ -254,7 +243,7 @@ public class Client {
    *
    * @param messageId 消息ID
    */
-  public void putInCache(int messageId) {
+  public void putInCache(Long messageId) {
     cache.put(messageId, new Object());
   }
 
@@ -264,7 +253,7 @@ public class Client {
    * @param messageId 消息ID
    * @return boolean
    */
-  public boolean hasConsumed(int messageId) {
+  public boolean hasConsumed(Long messageId) {
     return cache.getIfPresent(messageId) != null;
   }
 }
