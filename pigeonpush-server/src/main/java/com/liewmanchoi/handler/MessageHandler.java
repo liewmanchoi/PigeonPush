@@ -42,6 +42,8 @@ public class MessageHandler extends ChannelInboundHandlerAdapter {
         break;
     }
 
+    // 回收Message
+    message.recycle();
     super.channelRead(ctx, msg);
   }
 }

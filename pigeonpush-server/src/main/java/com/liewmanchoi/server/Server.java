@@ -75,6 +75,7 @@ public class Server {
             ? new EpollEventLoopGroup(serverConfig.getIoThreads())
             : new NioEventLoopGroup(serverConfig.getIoThreads());
     channelMap = new ConcurrentHashMap<>(10000);
+    serializer = new ProtostuffSerializer();
 
     ServerBootstrap bootstrap = new ServerBootstrap();
     bootstrap
@@ -181,14 +182,20 @@ public class Server {
     if (message.getType() != Message.PUSH) {
       // 如果推送的消息类型不是PUSH，直接返回
       log.warn(">>>   推送消息类型有误   <<<");
+
+      // 除非正常发送（序列化编码时Message对象会被回收），否则都需要另行回收
+      message.recycle();
       return;
     }
+
     final String clientID = message.getClientId();
     final NioSocketChannel channel = channelMap.get(clientID);
     if (channel == null || !channel.isActive()) {
       // 如果连接状态错误，关闭连接
       log.warn(">>>   与客户端[{}]的连接错误   <<<", clientID);
       shutdownConnection(clientID);
+      // 回收Message对象
+      message.recycle();
       return;
     }
 

@@ -59,7 +59,13 @@ Scaled message push service framework. 可扩展消息推送服务框架
  ## pigeon-notification消息接入模块
  
  ## 额外事项：
- // TODO: Message的复用与回收时机
+ - 对象池：由于`Message`对象会在系统中频繁创建与销毁，因此使用Netty自带的对象池能够显著提升系统性能，防止垃圾回收带来的STW(stop the world)停顿
+    - 复用reuse时机：
+        - 反序列化生成`Message`对象
+        - 主动构造`Message`对象
+    - 回收recycle时机：
+        - 序列化`Message`对象为字节流后
+        - `Message`对象已经被使用完成后（比如将`Message`对象转化成`PushMessage`对象后）
 
 
 ## TODO:

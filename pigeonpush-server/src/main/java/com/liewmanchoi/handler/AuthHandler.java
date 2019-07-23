@@ -59,6 +59,9 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
       }
     }
 
+    // 回收Message
+    message.recycle();
+
     super.channelRead(ctx, msg);
   }
 }
