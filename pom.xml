@@ -188,6 +188,12 @@
         <groupId>org.springframework</groupId>
         <version>${spring.version}</version>
       </dependency>
+      <!-- https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka -->
+      <dependency>
+        <groupId>org.springframework.kafka</groupId>
+        <artifactId>spring-kafka</artifactId>
+        <version>${spring-kafka.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <description>Scaled message push service framework.可扩展消息推送服务框架</description>
@@ -209,6 +215,7 @@
 
   <properties>
     <spring-boot.version>2.1.1.RELEASE</spring-boot.version>
+    <spring-kafka.version>2.2.7.RELEASE</spring-kafka.version>
     <dubbo.version>2.7.1</dubbo.version>
     <curator.version>4.2.0</curator.version>
     <fastjson.version>1.2.58</fastjson.version>
