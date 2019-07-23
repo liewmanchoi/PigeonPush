@@ -1,6 +1,4 @@
-com\liewmanchoi\zookeeper\ZookeeperRegistry.class
 com\liewmanchoi\service\AppAuthService.class
-com\liewmanchoi\zookeeper\ZookeeperRegistry$1.class
 com\liewmanchoi\config\RedisConfig.class
 com\liewmanchoi\service\impl\ConsistentHashService.class
 com\liewmanchoi\controller\ClientController.class
