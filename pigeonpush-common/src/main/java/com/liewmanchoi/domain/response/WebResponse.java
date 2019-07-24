@@ -14,7 +14,7 @@ import lombok.Data;
  * @date 2019/7/9
  */
 @Data
-public class HttpResponse implements Serializable {
+public class WebResponse implements Serializable {
   private static final long serialVersionUID = 6320874985319179068L;
 
   public static final class CODE {
@@ -22,7 +22,7 @@ public class HttpResponse implements Serializable {
     public static final int FAILURE = 500;
   }
 
-  public HttpResponse() {
+  public WebResponse() {
     this.data = new HashMap<>();
   }
 

@@ -1,8 +1,8 @@
 package com.liewmanchoi.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.liewmanchoi.domain.response.HttpResponse;
-import com.liewmanchoi.domain.response.HttpResponse.CODE;
+import com.liewmanchoi.domain.response.WebResponse;
+import com.liewmanchoi.domain.response.WebResponse.CODE;
 import com.liewmanchoi.domain.user.DeviceInfo;
 import com.liewmanchoi.service.AppAuthService;
 import com.liewmanchoi.service.DiscoveryService;
@@ -23,12 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class ClientController {
 
-  @Autowired
-  private AppAuthService appAuthService;
-  @Autowired
-  private LoadBalancer loadBalancer;
-  @Autowired
-  private DiscoveryService discoveryService;
+  @Autowired private AppAuthService appAuthService;
+  @Autowired private LoadBalancer loadBalancer;
+  @Autowired private DiscoveryService discoveryService;
 
   @PostMapping(path = "/app/keyToken")
   public String getKeyToken(@RequestParam String deviceId) {
@@ -40,7 +37,7 @@ public class ClientController {
     InetSocketAddress socketAddress = loadBalancer.selectPushServer(addressList, deviceId);
 
     // 构造响应对象
-    HttpResponse response = new HttpResponse();
+    WebResponse response = new WebResponse();
     if (socketAddress == null) {
       // 如果没有可用的服务器，则设置失败
       response.setCode(CODE.FAILURE);
