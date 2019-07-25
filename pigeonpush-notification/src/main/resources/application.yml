@@ -1,0 +1,8 @@
+cluster:
+  data-center-id: 0
+  worker-id: 0
+
+spring:
+  kafka:
+    producer:
+      bootstrap-servers: 192.168.29.131:9092, 192.168.29.134:9092, 192.168.29.135:9092

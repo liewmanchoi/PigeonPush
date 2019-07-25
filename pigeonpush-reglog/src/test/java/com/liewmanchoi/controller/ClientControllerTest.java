@@ -6,8 +6,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.alibaba.fastjson.JSON;
-import com.liewmanchoi.domain.response.HttpResponse;
-import com.liewmanchoi.domain.response.HttpResponse.CODE;
+import com.liewmanchoi.domain.response.WebResponse;
+import com.liewmanchoi.domain.response.WebResponse.CODE;
 import com.liewmanchoi.domain.user.DeviceInfo;
 import com.liewmanchoi.service.AppAuthService;
 import com.liewmanchoi.service.DiscoveryService;
@@ -29,14 +29,10 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(ClientController.class)
 public class ClientControllerTest {
 
-  @Autowired
-  private MockMvc mockMvc;
-  @MockBean
-  private AppAuthService appAuthService;
-  @MockBean
-  private LoadBalancer loadBalancer;
-  @MockBean
-  private DiscoveryService discoveryService;
+  @Autowired private MockMvc mockMvc;
+  @MockBean private AppAuthService appAuthService;
+  @MockBean private LoadBalancer loadBalancer;
+  @MockBean private DiscoveryService discoveryService;
 
   @Test
   public void getKeyToken() throws Exception {
@@ -59,7 +55,7 @@ public class ClientControllerTest {
         .thenReturn(socketAddress);
 
     // 构造响应对象
-    HttpResponse response = new HttpResponse();
+    WebResponse response = new WebResponse();
     response.setCode(CODE.OK);
     DeviceInfo deviceInfo = new DeviceInfo();
     deviceInfo.setDeviceId(id);
@@ -70,7 +66,9 @@ public class ClientControllerTest {
 
     String res = JSON.toJSONString(response);
 
-    this.mockMvc.perform(post(String.format("/app/keyToken?deviceId=%s", id)))
-        .andExpect(status().isOk()).andExpect(content().string(res));
+    this.mockMvc
+        .perform(post(String.format("/app/keyToken?deviceId=%s", id)))
+        .andExpect(status().isOk())
+        .andExpect(content().string(res));
   }
 }

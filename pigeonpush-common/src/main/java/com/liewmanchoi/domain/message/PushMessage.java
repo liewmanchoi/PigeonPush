@@ -15,7 +15,7 @@ import lombok.ToString;
 public class PushMessage implements Serializable {
   private static final long serialVersionUID = -4676901532250471660L;
 
-  private Integer messageId;
+  private Long messageId;
   private String clientId;
   private String title;
   private String text;

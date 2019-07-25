@@ -15,7 +15,7 @@ public class ACKServiceImpl implements ACKService {
   @Autowired private RedisDAO redisDAO;
 
   @Override
-  public void handleACK(String clientID, Integer messageID) {
+  public void handleACK(String clientID, Long messageID) {
     if (clientID == null || messageID == null) {
       return;
     }

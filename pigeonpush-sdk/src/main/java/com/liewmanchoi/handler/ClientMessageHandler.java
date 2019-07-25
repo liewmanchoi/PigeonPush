@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
  * @date 2019/7/10
  */
 @AllArgsConstructor
-public class MsgConsumeHandler extends ChannelInboundHandlerAdapter {
+public class ClientMessageHandler extends ChannelInboundHandlerAdapter {
 
   private Client client;
 
@@ -27,7 +27,7 @@ public class MsgConsumeHandler extends ChannelInboundHandlerAdapter {
       // 回收Message对象
       message.recycle();
 
-      int messageId = pushMessage.getMessageId();
+      Long messageId = pushMessage.getMessageId();
       if (client.hasConsumed(messageId)) {
         // 如果消息已经被消费，则丢弃之
         return;

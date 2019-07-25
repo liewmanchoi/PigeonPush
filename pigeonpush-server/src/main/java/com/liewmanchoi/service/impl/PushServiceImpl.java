@@ -31,7 +31,7 @@ public class PushServiceImpl implements PushService {
     if (pushMessage == null || !pushMessage.isValid()) {
       return;
     }
-    final Integer messageID = pushMessage.getMessageId();
+    final Long messageID = pushMessage.getMessageId();
     final String clientID = pushMessage.getClientId();
 
     // 如果消息体为空，查询后填充
@@ -54,7 +54,7 @@ public class PushServiceImpl implements PushService {
       if (title == null && text == null) {
         // 如果查找到的消息体为空，说明发生了异常，也应该拒绝发送
         log.warn(">>>   查找到[{}]的消息体为空，不再推送消息   <<<", messageID);
-        // 消息无法发送，应视作已经成功过送达（相当于收到ACK确认消息）
+        // 消息无法发送，应视作已经成功送达（相当于收到ACK确认消息）
         ackService.handleACK(clientID, messageID);
         return;
       }
