@@ -3,6 +3,7 @@ package com.liewmanchoi.dao;
 import com.liewmanchoi.constant.RedisPrefix;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
@@ -46,5 +47,11 @@ public class RedisDAO {
   public void addWaitACK(String clientID, Long messageID) {
     String key = generateKey(RedisPrefix.ACK_PRE, clientID);
     setOperations.add(key, messageID);
+  }
+
+  /** 获取clientID对应的所有待确认消息messageID列表 */
+  public Set<Object> getWaitACKMessages(String clientID) {
+    String key = generateKey(RedisPrefix.ACK_PRE, clientID);
+    return setOperations.members(key);
   }
 }
