@@ -17,6 +17,7 @@ import redis.clients.jedis.JedisPoolConfig;
  */
 @Configuration
 public class RedisConfig {
+  // TODO: 是否需要修改RedisTemplate的泛型参数和序列化方式？
 
   @Bean
   public RedisConnectionFactory redisConnectionFactory() {
