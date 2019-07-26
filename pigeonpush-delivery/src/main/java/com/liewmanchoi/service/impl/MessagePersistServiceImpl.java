@@ -30,5 +30,6 @@ public class MessagePersistServiceImpl implements MessagePersistService {
     }
 
     redisDAO.addMessage(message.getMessageId(), message.getTitle(), message.getText());
+    log.info(">>>   持久化[{}]的消息体   <<<", message.getMessageId());
   }
 }
