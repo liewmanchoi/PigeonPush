@@ -45,14 +45,14 @@ public class HandlerTest {
     String clientID = UUID.randomUUID().toString();
     PushMessage pushMessage = new PushMessage();
     pushMessage.setClientId(clientID);
-    pushMessage.setMessageId(1);
+    pushMessage.setMessageId(1L);
     pushMessage.setTitle("测试");
     pushMessage.setText("测试必定会成功");
 
     Message push1 = Message.buildPush(pushMessage);
     pushMessage.setText("老天保佑测试成功");
 
-    Message push2 = Message.buildACK("帅气的我", 8);
+    Message push2 = Message.buildACK("帅气的我", 8L);
     System.out.println(push1);
     System.out.println(push2);
     // 发送再接收
@@ -81,7 +81,7 @@ public class HandlerTest {
     String clientID = UUID.randomUUID().toString();
     PushMessage pushMessage = new PushMessage();
     pushMessage.setClientId(clientID);
-    pushMessage.setMessageId(1);
+    pushMessage.setMessageId(1L);
     pushMessage.setTitle("测试");
     pushMessage.setText("测试必定会成功");
 

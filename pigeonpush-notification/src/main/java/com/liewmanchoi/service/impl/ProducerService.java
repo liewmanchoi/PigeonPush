@@ -1,9 +1,9 @@
 package com.liewmanchoi.service.impl;
 
+import com.liewmanchoi.constant.KafkaConstant;
 import com.liewmanchoi.domain.message.PushMessage;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +13,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ProducerService {
-  @Value("PigeonPush")
-  private String topic;
+  private final String topic = KafkaConstant.TOPIC;
 
-  @Autowired
-  private KafkaTemplate<String, PushMessage> kafkaTemplate;
+  @Autowired private KafkaTemplate<String, PushMessage> kafkaTemplate;
 
   public void push(List<PushMessage> messages) {
     if (messages == null || messages.isEmpty()) {
@@ -25,7 +23,9 @@ public class ProducerService {
     }
 
     for (PushMessage message : messages) {
-      kafkaTemplate.send(topic, message);
+      if (message.isValid()) {
+        kafkaTemplate.send(topic, message);
+      }
     }
   }
 }

@@ -71,7 +71,6 @@
     <dependency>
       <groupId>org.springframework.kafka</groupId>
       <artifactId>spring-kafka</artifactId>
-      <version>${spring-kafka.version}</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka-test -->
     <dependency>

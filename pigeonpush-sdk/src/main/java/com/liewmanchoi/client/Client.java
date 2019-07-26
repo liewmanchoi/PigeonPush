@@ -8,8 +8,8 @@ import com.liewmanchoi.codec.MessageDecoder;
 import com.liewmanchoi.codec.MessageEncoder;
 import com.liewmanchoi.constant.FrameConstant;
 import com.liewmanchoi.constant.NetConstant;
-import com.liewmanchoi.domain.response.HttpResponse;
-import com.liewmanchoi.domain.response.HttpResponse.CODE;
+import com.liewmanchoi.domain.response.WebResponse;
+import com.liewmanchoi.domain.response.WebResponse.CODE;
 import com.liewmanchoi.domain.user.DeviceInfo;
 import com.liewmanchoi.exception.ClientException;
 import com.liewmanchoi.exception.ClientException.ErrorEnum;
@@ -145,7 +145,7 @@ public class Client {
             // 获取字符串形式的请求响应体
             String body = response.body().toString();
             // 解析成json对象
-            HttpResponse httpResponse = JSON.parseObject(body, HttpResponse.class);
+            WebResponse httpResponse = JSON.parseObject(body, WebResponse.class);
             /* JSON格式：
             { code: 0;
             data: {
