@@ -25,10 +25,8 @@ import org.springframework.stereotype.Service;
     timeout = 10000)
 public class PullServiceImpl implements PullService {
 
-  @Autowired
-  private WaitACKService waitACKService;
-  @Autowired
-  private DeliveryService deliveryService;
+  @Autowired private WaitACKService waitACKService;
+  @Autowired private DeliveryService deliveryService;
 
   @Override
   public void pullMessage(String clientId) {
