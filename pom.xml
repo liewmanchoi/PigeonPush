@@ -201,6 +201,24 @@
         <version>${spring-kafka.version}</version>
         <scope>test</scope>
       </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>${jackson.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        <version>${jackson.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson.version}</version>
+        <scope>runtime</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <description>Scaled message push service framework.可扩展消息推送服务框架</description>
@@ -244,6 +262,7 @@
     <slf4j-api.version>1.7.26</slf4j-api.version>
     <spring.version>5.1.5.RELEASE</spring.version>
     <swagger.version>2.5.0</swagger.version>
+    <jackson.version>2.9.8</jackson.version>
   </properties>
 
   <repositories>
