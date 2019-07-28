@@ -6,3 +6,8 @@ spring:
   kafka:
     producer:
       bootstrap-servers: 192.168.29.131:9092, 192.168.29.134:9092, 192.168.29.135:9092
+
+logging:
+  file: notification.log
+  register-shutdown-hook: true
+  path: /var/log/PushPigeon
