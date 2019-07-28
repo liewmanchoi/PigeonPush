@@ -114,7 +114,6 @@ public class ZookeeperRegistry {
       log.info("注册节点[{}]成功", path);
     } catch (Exception e) {
       log.error("注册节点[{}]失败", path, e);
-      throw new RuntimeException(String.format("注册节点[%s]失败", path), e);
     }
   }
 }
