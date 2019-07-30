@@ -41,9 +41,6 @@ public class MessageHandler extends SimpleChannelInboundHandler<Message> {
     // 只针对push消息处理
     if (msg.getType() == Message.PUSH) {
       PushMessage pushMessage = msg.getPushMessage();
-      // 回收Message对象
-      msg.recycle();
-
       Long messageId = pushMessage.getMessageId();
       log.info(">>>   客户端接收到id=[{}]的推送消息   <<<", messageId);
       if (client.hasConsumed(messageId)) {

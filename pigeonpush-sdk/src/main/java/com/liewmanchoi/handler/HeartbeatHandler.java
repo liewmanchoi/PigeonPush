@@ -33,7 +33,6 @@ public class HeartbeatHandler extends ChannelInboundHandlerAdapter {
     if (message.getType() == Message.PONG) {
       // 收到PONG类型的消息（心跳响应），回收Message对象，不再向下传播时间
       log.info(">>>   接收到服务端[{}]发送的心跳响应   <<<", ctx.channel().remoteAddress());
-      message.recycle();
     }
 
     super.channelRead(ctx, msg);
