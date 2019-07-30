@@ -2,6 +2,7 @@ package com.liewmanchoi.handler;
 
 import com.liewmanchoi.server.Server;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -75,8 +76,7 @@ public class DisconnectHandler extends ChannelInboundHandlerAdapter {
 
     Channel channel = ctx.channel();
     if (channel != null && channel.isOpen()) {
-      channel.close().syncUninterruptibly();
-      log.info(">>>   关闭连接   <<<");
+      channel.close().addListener((ChannelFutureListener) future -> log.info(">>>   关闭连接   <<<"));
     }
   }
 }

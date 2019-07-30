@@ -19,6 +19,7 @@ import com.liewmanchoi.util.IpUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -102,7 +103,6 @@ public class Server {
 
     // 向Zookeeper集群注册服务器
     registerService.register(ipAddress, future.channel().eventLoop());
-
   }
 
   private ChannelInitializer<SocketChannel> initPipeline() {
@@ -192,8 +192,10 @@ public class Server {
     // 4. 关闭channel
     SocketChannel channel = channelMap.get(clientID);
     if (channel != null && channel.isOpen()) {
-      channel.close().syncUninterruptibly();
-      log.info(">>>   关闭与[{}]的连接   <<<", clientID);
+      channel
+          .close()
+          .addListener(
+              (ChannelFutureListener) future -> log.info(">>>   关闭与[{}]的连接   <<<", clientID));
     }
 
     log.info(">>>   连接关闭后的清理工作完成   <<<");
@@ -237,9 +239,10 @@ public class Server {
     }
 
     if (future != null) {
-      future.channel().close().syncUninterruptibly();
+      future
+          .channel()
+          .close()
+          .addListener((ChannelFutureListener) future -> log.info(">>>   推送服务器关闭   <<<"));
     }
-
-    log.info(">>>   推送服务器关闭   <<<");
   }
 }
