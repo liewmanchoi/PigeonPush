@@ -2,7 +2,6 @@ package com.liewmanchoi.service.impl;
 
 import com.liewmanchoi.dao.RedisDAO;
 import com.liewmanchoi.service.api.WaitACKService;
-import java.util.HashSet;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,19 +34,12 @@ public class WaitACKServiceImpl implements WaitACKService {
       return null;
     }
 
-    Set<Object> messageIds = redisDAO.getWaitACKMessages(clientID);
+    Set<Long> messageIds = redisDAO.getWaitACKMessages(clientID);
     if (messageIds == null || messageIds.isEmpty()) {
       log.warn(">>>   没有查询到[{}]对应的待确认消息列表   <<<", clientID);
       return null;
     }
 
-    // 强制类型转换
-    // TODO: 更优雅的实现方式？
-    Set<Long> result = new HashSet<>();
-    for (Object id : messageIds) {
-      result.add((Long) id);
-    }
-
-    return result;
+    return messageIds;
   }
 }

@@ -55,7 +55,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     Map<String, String> routeCache = new HashMap<>(messages.size());
 
     for (PushMessage message : messages) {
-      if (!message.isValid()) {
+      if (!message.valid()) {
         // 消息无效，忽略之
         continue;
       }
@@ -93,11 +93,12 @@ public class DeliveryServiceImpl implements DeliveryService {
         // 从缓存中取出地址
         ipAddress = routeCache.get(clientId);
       }
+      log.info(">>>   对应的推送服务器地址为[{}]   <<<", ipAddress);
 
       // 4. 将ip地址放入到RpcContext中，使得Dubbo能够直接调用该推送服务器
       RpcContext.getContext().set("ip", ipAddress);
       // 5. 发起远程调用
-      log.info(">>>   发起RPC调用   <<<");
+      log.info(">>>   向推送服务器发起RPC调用   <<<");
       pushService.pushMessage(message);
     }
   }

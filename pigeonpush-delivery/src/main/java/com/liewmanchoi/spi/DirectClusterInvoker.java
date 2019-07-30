@@ -30,6 +30,7 @@ public class DirectClusterInvoker<T> extends AbstractClusterInvoker<T> {
     try {
       // 1. 获取设置的ip地址
       String ipAddress = (String) RpcContext.getContext().get("ip");
+      log.info(">>>   设置的远程ip地址为[{}]   <<<", ipAddress);
       if (StringUtils.isBlank(ipAddress)) {
         // 无法获取到ip地址，直接忽略，返回空的RpcResult
         log.error(">>>   没有设置被调用推送服务器的IP地址   <<<");
