@@ -3,18 +3,17 @@ package com.liewmanchoi.client;
 import com.alibaba.fastjson.JSON;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.liewmanchoi.api.MessageProcessor;
+import com.liewmanchoi.api.MessageListener;
 import com.liewmanchoi.codec.MessageDecoder;
 import com.liewmanchoi.codec.MessageEncoder;
 import com.liewmanchoi.constant.FrameConstant;
 import com.liewmanchoi.constant.NetConstant;
 import com.liewmanchoi.domain.response.WebResponse;
 import com.liewmanchoi.domain.response.WebResponse.CODE;
-import com.liewmanchoi.domain.user.DeviceInfo;
 import com.liewmanchoi.exception.ClientException;
 import com.liewmanchoi.exception.ClientException.ErrorEnum;
-import com.liewmanchoi.handler.ClientMessageHandler;
 import com.liewmanchoi.handler.HeartbeatHandler;
+import com.liewmanchoi.handler.MessageHandler;
 import com.liewmanchoi.serialize.ProtostuffSerializer;
 import com.liewmanchoi.util.SDKUtil;
 import io.netty.bootstrap.Bootstrap;
@@ -35,6 +34,7 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.timeout.IdleStateHandler;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
@@ -58,11 +58,16 @@ public class Client {
   @Getter private volatile Channel futureChannel;
 
   private volatile Bootstrap bootstrap;
-  @Getter private DeviceInfo deviceInfo;
   /** 鉴权服务器所在地址 */
   @Getter private String url;
-
-  @Getter private MessageProcessor messageProcessor;
+  /** 消息处理回调 */
+  @Getter private MessageListener listener = null;
+  /** 鉴权密钥 */
+  @Getter private volatile String keyToken;
+  /** 客户端SDK唯一标识 */
+  @Getter private volatile String clientId;
+  /** 推送服务器地址 */
+  @Getter private volatile InetSocketAddress remoteAddress;
 
   private ProtostuffSerializer serializer;
   /** 最近消息ID缓存，保证消息消费的幂等性 */
@@ -73,23 +78,20 @@ public class Client {
           .expireAfterAccess(12, TimeUnit.HOURS)
           .build();
 
-  public void run(String url, MessageProcessor messageProcessor) {
-    init(url, messageProcessor);
+  public void run(String url) {
+    init(url);
     // 鉴权并发起TCP长连接
     authenticateAndConnect();
   }
 
-  private void init(String url, MessageProcessor messageProcessor) {
-    deviceInfo = new DeviceInfo();
-    String deviceId = SDKUtil.getDeviceId();
-    deviceInfo.setDeviceId(deviceId);
-    if (deviceId == null) {
+  private void init(String url) {
+    clientId = SDKUtil.getClientId();
+    if (clientId == null) {
       log.error("获取deviceId失败");
-      throw new ClientException(ErrorEnum.DEVICE_ID_FAILURE, "获取deviceId失败");
+      throw new ClientException(ErrorEnum.DEVICE_ID_FAILURE, "获取clientId失败");
     }
 
     this.url = url;
-    this.messageProcessor = messageProcessor;
     boolean isEpoll = Epoll.isAvailable();
     log.info("是否支持Epoll调用[{}]", isEpoll);
     serializer = new ProtostuffSerializer();
@@ -112,67 +114,81 @@ public class Client {
     // 构建http客户端
     OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
     // 构造http请求体
-    FormBody formBody = new FormBody.Builder().add("deviceId", deviceInfo.getDeviceId()).build();
+    FormBody formBody = new FormBody.Builder().add("clientId", clientId).build();
     // 构建http post请求
     Request request = new Request.Builder().url(url + "/app/keyToken").post(formBody).build();
 
-    log.info("向地址[{}]发送post鉴权请求", url + "/app/keyToken");
+    log.info(">>>   向地址[{}]发送post鉴权请求   <<<", url + "/app/keyToken");
     // 发送请求
     Call call = okHttpClient.newCall(request);
     call.enqueue(
         new Callback() {
           @Override
           public void onFailure(Call call, IOException e) {
-            log.error("向[{}]发送HTTP请求失败", request.url(), e);
-            log.warn("开始向[{}]重新发送HTTP请求...", request.url());
+            log.error(">>>   向[{}]发送HTTP请求失败   <<<", request.url(), e);
+            log.warn(">>>   开始向[{}]重新发送HTTP请求...", request.url());
             call.clone().enqueue(this);
             call.cancel();
           }
 
           @Override
           public void onResponse(Call call, Response response) throws IOException {
+            log.info(">>>   接收到请求[{}]的响应   <<<", call.request().url());
             final int SUCCESS = 200;
 
             if (response.code() != SUCCESS) {
               log.error("HTTP请求发生错误，错误码为[{}]", response.code());
+
+              // 开启重连
+              reconnect();
               return;
             }
 
             if (response.body() == null) {
               log.error("HTTP请求响应体为空");
+              log.warn(">>>   开始向[{}]重新发送HTTP请求...", request.url());
+
+              // 开启重连
+              reconnect();
               return;
             }
             // 获取字符串形式的请求响应体
-            String body = response.body().toString();
+            String body = response.body().string();
+
             // 解析成json对象
             WebResponse httpResponse = JSON.parseObject(body, WebResponse.class);
             /* JSON格式：
-            { code: 0;
-            data: {
-              entity: {
-                deviceId:
-                deviceToken:
-                serverAddress:
-                }
+            { code:
+              data: {
+                keyToken:
+                remoteAddress:
               }
             }
              */
             if (httpResponse.getCode() == CODE.FAILURE) {
               log.error("请求执行失败，失败原因[{}]", httpResponse.getData().get("message"));
+              log.warn(">>>   开始向[{}]重新发送HTTP请求...", request.url());
+
+              // 开启重连
+              reconnect();
               return;
             }
 
-            DeviceInfo deviceInfo = (DeviceInfo) httpResponse.getData().get("entity");
             // 获取deviceToken
-            String deviceToken = deviceInfo.getDeviceToken();
-            Client.this.deviceInfo.setDeviceToken(deviceToken);
-
+            Client.this.keyToken = (String) httpResponse.getData().get("keyToken");
             // 获取push server地址
-            InetSocketAddress serverAddress = deviceInfo.getServerAddress();
-            Client.this.deviceInfo.setServerAddress(serverAddress);
+            String ipAddress = (String) httpResponse.getData().get("ipAddress");
+            int port = (int) httpResponse.getData().get("port");
+            Client.this.remoteAddress =
+                new InetSocketAddress(InetAddress.getByName(ipAddress), port);
 
             // 获得推送服务器地址后，发起连接
             doConnect();
+          }
+
+          private void reconnect() {
+            call.clone().enqueue(this);
+            call.cancel();
           }
         });
   }
@@ -180,7 +196,7 @@ public class Client {
   private ChannelInitializer<SocketChannel> initPipeline() {
     return new ChannelInitializer<SocketChannel>() {
       @Override
-      protected void initChannel(SocketChannel ch) throws Exception {
+      protected void initChannel(SocketChannel ch) {
         ch.pipeline()
             .addLast("IdleStateHandler", new IdleStateHandler(0, 0, NetConstant.HEARTBEAT_TIMEOUT))
             .addLast(
@@ -201,7 +217,7 @@ public class Client {
             // 成功建立连接后，ConnectionListener将会在此处添加AuthHandler用于鉴权认证，认证成功后，会自动删除
             // 处理心跳监控
             .addLast("HeartbeatHandler", new HeartbeatHandler(Client.this))
-            .addLast("ClientMessageHandler", new ClientMessageHandler(Client.this));
+            .addLast("MessageHandler", new MessageHandler(Client.this));
       }
     };
   }
@@ -209,21 +225,34 @@ public class Client {
   public void doConnect() {
     // 开始连接之前，关闭可能存在的旧的连接，以释放资源
     if (futureChannel != null && futureChannel.isOpen()) {
-      log.warn("存在着未关闭的旧连接，开始关闭...");
-      futureChannel.close().syncUninterruptibly();
+      log.warn(">>>   存在着未关闭的旧连接，开始关闭...   <<<");
     }
+    closeChannel();
 
-    log.info("开始连接服务器[{}]", deviceInfo.getServerAddress());
-    ChannelFuture channelFuture = bootstrap.connect(deviceInfo.getServerAddress());
+    log.info(">>>   开始连接服务器[{}]   <<<", remoteAddress.getAddress());
+    ChannelFuture channelFuture = bootstrap.connect(remoteAddress);
     // 设置channel
     this.futureChannel = channelFuture.channel();
     // 添加listener，如果失败，则发起重连
     channelFuture.addListener(new ConnectionListener(this));
   }
 
+  public void closeChannel() {
+    if (futureChannel != null && futureChannel.isOpen()) {
+      log.info(">>>   客户端[{}]正在关闭连接   <<<", clientId);
+      futureChannel.close().syncUninterruptibly();
+      log.info(">>>   客户端[{}]成功连接   <<<", clientId);
+    }
+  }
+
+  /** 添加消息处理回调 */
+  public void addListener(MessageListener messageListener) {
+    this.listener = messageListener;
+  }
+
   public void close() {
     if (futureChannel != null && futureChannel.isOpen()) {
-      log.info("正在关闭客户端SDK...");
+      log.info(">>>   正在关闭客户端SDK的连接..   <<<");
       try {
         futureChannel.close().syncUninterruptibly();
       } finally {
@@ -235,7 +264,7 @@ public class Client {
         }
       }
     }
-    log.info("成功关闭客户端SDK");
+    log.info(">>>   成功关闭客户端SDK连接   <<<");
   }
 
   /**

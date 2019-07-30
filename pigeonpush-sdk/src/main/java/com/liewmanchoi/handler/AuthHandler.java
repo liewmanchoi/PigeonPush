@@ -22,12 +22,12 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
   @Override
   public void channelActive(ChannelHandlerContext ctx) throws Exception {
     // 成功建立连接，则向推送服务器发送认证请求
-    String clientId = client.getDeviceInfo().getDeviceId();
-    String token = client.getDeviceInfo().getDeviceToken();
+    String clientId = client.getClientId();
+    String keyToken = client.getKeyToken();
     // 发送AUTH_REQ握手请求消息
-    Message message = Message.buildAuthReq(clientId, token);
+    Message message = Message.buildAuthReq(clientId, keyToken);
 
-    log.info("向推送服务器发送认证请求");
+    log.info(">>>   成功建立连接，向推送服务器发送客户端[{}]认证请求   <<<", clientId);
     ctx.writeAndFlush(message);
   }
 
@@ -36,19 +36,27 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
     // 读取消息
     Message message = (Message) msg;
 
+    String clientId = client.getClientId();
     if (message.getType() == Message.AUTH_RES) {
       // 如果是认证响应消息
       int code = (Integer) message.getAttachment().get("code");
       if (code == AuthState.SUCCESS) {
         // 如果认证成功，则删除AuthHandler
+        log.info(">>>   鉴权成功，删除鉴权拦截器AuthHandler   <<<");
         ctx.pipeline().remove(this);
       } else {
         // 如果认证失败，则重新请求鉴权服务
-        log.error("认证失败，重新请求鉴权");
+        log.error(">>>   客户端[{}]认证失败，重新请求鉴权   <<<", clientId);
         client.authenticateAndConnect();
       }
+    } else {
+      log.error(">>>   客户端[{}]在鉴权期间收到了服务器发送的其他类型的信息   <<<", clientId);
+      log.warn(">>>   客户端[{}]将主动关闭连接   <<<", clientId);
+      client.closeChannel();
     }
 
+    // 回收Message对象
+    message.recycle();
     super.channelRead(ctx, msg);
   }
 }

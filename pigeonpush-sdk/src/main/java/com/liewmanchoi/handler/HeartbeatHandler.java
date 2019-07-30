@@ -15,11 +15,9 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class HeartbeatHandler extends ChannelInboundHandlerAdapter {
-
-  /**
-   * 计数器
-   */
+  /** 计数器 */
   private int count = 0;
+
   private Client client;
 
   public HeartbeatHandler(Client client) {
@@ -30,6 +28,14 @@ public class HeartbeatHandler extends ChannelInboundHandlerAdapter {
   public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
     // 收到服务器发来的消息，则计数器清零
     count = 0;
+
+    Message message = (Message) msg;
+    if (message.getType() == Message.PONG) {
+      // 收到PONG类型的消息（心跳响应），回收Message对象，不再向下传播时间
+      log.info(">>>   接收到服务端[{}]发送的心跳响应   <<<", ctx.channel().remoteAddress());
+      message.recycle();
+    }
+
     super.channelRead(ctx, msg);
   }
 
@@ -45,11 +51,13 @@ public class HeartbeatHandler extends ChannelInboundHandlerAdapter {
     if (evt instanceof IdleStateEvent) {
       if (count < NetConstant.HEARTBEAT_TIMEOUT_MAX_TIMES) {
         Channel channel = ctx.channel();
-        log.warn("SDK在[{}]s内均没有收发数据，主动发送心跳至服务器[{}]", NetConstant.HEARTBEAT_TIMEOUT,
+        log.warn(
+            "SDK在[{}]s内均没有收发数据，主动发送心跳至服务器[{}]",
+            NetConstant.HEARTBEAT_TIMEOUT,
             channel.remoteAddress());
         // 发送PING消息
         // 消息必须由channel（而不是ctx）来发送，这样才能在pipeline中完整地流转
-        channel.writeAndFlush(Message.buildPING(client.getDeviceInfo().getDeviceId()));
+        channel.writeAndFlush(Message.buildPING(client.getClientId()));
         // 递增计数器
         ++count;
       } else {

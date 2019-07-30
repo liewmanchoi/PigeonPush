@@ -7,7 +7,6 @@ import com.liewmanchoi.domain.message.PushMessage;
  * @date 2019/7/10
  */
 @FunctionalInterface
-public interface MessageProcessor {
-
+public interface MessageListener {
   void process(PushMessage message);
 }
