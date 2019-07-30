@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "push-server")
 public class ServerConfig {
+  String address;
   int port;
   int ioThreads;
 }
