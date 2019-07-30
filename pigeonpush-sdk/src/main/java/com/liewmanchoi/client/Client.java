@@ -240,8 +240,9 @@ public class Client {
   public void closeChannel() {
     if (futureChannel != null && futureChannel.isOpen()) {
       log.info(">>>   客户端[{}]正在关闭连接   <<<", clientId);
-      futureChannel.close().syncUninterruptibly();
-      log.info(">>>   客户端[{}]成功连接   <<<", clientId);
+      futureChannel
+          .close()
+          .addListener((ChannelFuture future) -> log.info(">>>   客户端[{}]成功连接   <<<", clientId));
     }
   }
 
@@ -254,7 +255,7 @@ public class Client {
     if (futureChannel != null && futureChannel.isOpen()) {
       log.info(">>>   正在关闭客户端SDK的连接..   <<<");
       try {
-        futureChannel.close().syncUninterruptibly();
+        futureChannel.close();
       } finally {
         if (workerGroup != null
             && !workerGroup.isTerminated()

@@ -50,13 +50,9 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
         client.authenticateAndConnect();
       }
     } else {
-      log.error(">>>   客户端[{}]在鉴权期间收到了服务器发送的其他类型的信息   <<<", clientId);
-      log.warn(">>>   客户端[{}]将主动关闭连接   <<<", clientId);
-      client.closeChannel();
+      log.error(">>>   客户端[{}]在鉴权期间收到了服务器发送的其他类型的信息，消息类型为[{}]   <<<", clientId, message.getType());
     }
 
-    // 回收Message对象
-    message.recycle();
     super.channelRead(ctx, msg);
   }
 }
