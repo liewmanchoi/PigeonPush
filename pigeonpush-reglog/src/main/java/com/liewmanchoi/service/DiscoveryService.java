@@ -93,7 +93,7 @@ public class DiscoveryService {
     InetSocketAddress socketAddress = toSocketAddress(path);
     if (socketAddress != null) {
       cache.add(socketAddress);
-      log.info("增加服务器: [{}]", socketAddress);
+      log.info(">>>   增加服务器: [{}]   <<<", socketAddress.getAddress().getHostAddress());
     }
   }
 
@@ -102,7 +102,7 @@ public class DiscoveryService {
     InetSocketAddress socketAddress = toSocketAddress(path);
     if (socketAddress != null) {
       cache.remove(socketAddress);
-      log.info("删除服务器: [{}]", socketAddress);
+      log.info(">>>   删除服务器: [{}]   <<<", socketAddress.getAddress().getHostAddress());
     }
   }
 

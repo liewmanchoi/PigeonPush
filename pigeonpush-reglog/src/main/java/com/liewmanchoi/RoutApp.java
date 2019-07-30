@@ -14,6 +14,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 public class RoutApp {
 
   public static void main(String[] args) {
-    SpringApplication.run(SpringApplication.class);
+    SpringApplication.run(RoutApp.class);
   }
 }

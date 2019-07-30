@@ -53,6 +53,7 @@ public class ConsistentHashService implements LoadBalancer {
     // 计算对应的服务器序号
     int k = hashCode / len;
 
+    log.info(">>>   成功使用一致性哈希算法挑选推送服务器   <<<");
     return Iterables.get(slots, k);
   }
 

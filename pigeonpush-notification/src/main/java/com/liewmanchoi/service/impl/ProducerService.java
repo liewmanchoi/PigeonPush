@@ -23,7 +23,7 @@ public class ProducerService {
     }
 
     for (PushMessage message : messages) {
-      if (message.isValid()) {
+      if (message.valid()) {
         kafkaTemplate.send(topic, message);
       }
     }
