@@ -11,7 +11,7 @@ zookeeper:
   max-retries: 5
 
 push-server:
-  port: 8793
+  port: 15698
   ioThreads: 16
 
 dubbo:
@@ -22,6 +22,11 @@ dubbo:
     base-packages: com.liewmanchoi.service.impl
   protocol:
     name: dubbo
-    port: 12345
+    port: 13145
   application:
     name: PushServer-provider
+    id: PushServer-provider
+logging:
+  file: push-server.log
+  register-shutdown-hook: true
+  path: /var/log/PushPigeon

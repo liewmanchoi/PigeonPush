@@ -1,19 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <parent>
-    <artifactId>PigeonPush</artifactId>
-    <groupId>com.liewmanchoi</groupId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
-  <modelVersion>4.0.0</modelVersion>
-
   <artifactId>pigeonpush-server</artifactId>
-  <name>server</name>
-
-
   <build>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
@@ -36,9 +26,7 @@
           <version>2.22.1</version>
         </plugin>
         <plugin>
-          <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
-          <version>2.1.6.RELEASE</version>
           <configuration>
             <mainClass>com.liewmanchoi.PushServerApp</mainClass>
           </configuration>
@@ -49,6 +37,8 @@
               </goals>
             </execution>
           </executions>
+          <groupId>org.springframework.boot</groupId>
+          <version>2.1.6.RELEASE</version>
         </plugin>
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
@@ -74,6 +64,7 @@
       </plugins>
     </pluginManagement>
   </build>
+
   <dependencies>
     <dependency>
       <artifactId>server-api</artifactId>
@@ -83,14 +74,14 @@
     </dependency>
     <!-- Dubbo Spring Boot Starter -->
     <dependency>
-      <groupId>org.apache.dubbo</groupId>
       <artifactId>dubbo-spring-boot-starter</artifactId>
+      <groupId>org.apache.dubbo</groupId>
       <version>2.7.1</version>
     </dependency>
 
     <dependency>
-      <groupId>org.apache.dubbo</groupId>
       <artifactId>dubbo</artifactId>
+      <groupId>org.apache.dubbo</groupId>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter -->
     <dependency>
@@ -106,14 +97,27 @@
       <groupId>redis.clients</groupId>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>
+      <groupId>org.springframework.boot</groupId>
     </dependency>
     <dependency>
-      <groupId>com.liewmanchoi</groupId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-json</artifactId>
+    </dependency>
+    <dependency>
       <artifactId>delivery-api</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <groupId>com.liewmanchoi</groupId>
       <scope>compile</scope>
+      <version>1.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
+  <modelVersion>4.0.0</modelVersion>
+
+
+  <name>server</name>
+  <parent>
+    <artifactId>PigeonPush</artifactId>
+    <groupId>com.liewmanchoi</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
 </project>

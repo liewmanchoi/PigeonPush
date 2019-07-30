@@ -33,6 +33,7 @@ public class KafkaConfig {
     config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
     config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
     config.put(ConsumerConfig.GROUP_ID_CONFIG, "PigeonConsumer");
+    config.put(JsonDeserializer.TRUSTED_PACKAGES, "com.liewmanchoi.domain.message");
 
     return config;
   }
