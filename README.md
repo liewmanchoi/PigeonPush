@@ -1,6 +1,8 @@
 # PigeonPush
 Scaled message push service framework. 可扩展消息推送服务框架
 
+![推送系统架构](./doc/推送系统架构图.JPG)
+
 ## Redis中的数据表
 在分析各个模块的功能之前，首先列举需要存储在Redis中供各个模块共用的数据表：
 - token表：存储`clientId`与`token`的对应关系
