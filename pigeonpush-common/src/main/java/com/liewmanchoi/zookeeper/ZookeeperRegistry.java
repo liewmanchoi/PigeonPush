@@ -93,15 +93,15 @@ public class ZookeeperRegistry {
         return true;
       }
     } catch (Exception e) {
-      log.error("监听[{}]子节点发生异常", path, e);
+      log.error(">>>   监听[{}]子节点发生异常   <<<", path, e);
     }
 
     return false;
   }
 
-  public void register(String socketAddress) {
+  public boolean register(String socketAddress) {
     if (zkCli == null || socketAddress == null || socketAddress.length() == 0) {
-      return;
+      return false;
     }
 
     String path = ZookeeperConstant.REG_PATH + "/" + socketAddress;
@@ -111,9 +111,12 @@ public class ZookeeperRegistry {
           .creatingParentContainersIfNeeded()
           .withMode(CreateMode.EPHEMERAL)
           .forPath(path);
-      log.info("注册节点[{}]成功", path);
+      log.info(">>>   注册节点[{}]成功   <<<", path);
+      return true;
     } catch (Exception e) {
       log.error("注册节点[{}]失败", path, e);
+      // 失败后开启重试，直至成功为止
+      return false;
     }
   }
 }
