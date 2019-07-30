@@ -6,7 +6,6 @@ import com.liewmanchoi.domain.message.Message;
 import com.liewmanchoi.domain.message.PushMessage;
 import com.liewmanchoi.server.Server;
 import com.liewmanchoi.service.ACKService;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,7 +27,7 @@ public class PushServiceImpl implements PushService {
 
   @Override
   public void pushMessage(PushMessage pushMessage) {
-    if (pushMessage == null || !pushMessage.isValid()) {
+    if (pushMessage == null || !pushMessage.valid()) {
       return;
     }
     final Long messageID = pushMessage.getMessageId();
@@ -38,9 +37,9 @@ public class PushServiceImpl implements PushService {
     if (pushMessage.bodyIsEmpty()) {
       log.info(">>> 消息[{}]的消息体为空，正在向Redis查询   <<<", messageID);
 
-      Map<String, String> bodyMap = redisDAO.getMessageBody(messageID);
+      PushMessage storedMessage = redisDAO.getMessageBody(messageID);
 
-      if (bodyMap == null) {
+      if (storedMessage == null || storedMessage.bodyIsEmpty()) {
         // 如果查找不到对应的消息体，拒绝发送
         log.warn(">>>   无法查找到消息[{}]的消息体，不再推送消息   <<<", messageID);
         // 消息无法发送，应视作已经成功过送达（相当于收到ACK确认消息）
@@ -48,16 +47,8 @@ public class PushServiceImpl implements PushService {
         return;
       }
 
-      final String title = bodyMap.get("title");
-      final String text = bodyMap.get("text");
-
-      if (title == null && text == null) {
-        // 如果查找到的消息体为空，说明发生了异常，也应该拒绝发送
-        log.warn(">>>   查找到[{}]的消息体为空，不再推送消息   <<<", messageID);
-        // 消息无法发送，应视作已经成功送达（相当于收到ACK确认消息）
-        ackService.handleACK(clientID, messageID);
-        return;
-      }
+      final String title = storedMessage.getTitle();
+      final String text = storedMessage.getText();
 
       // 填充消息体
       pushMessage.setTitle(title);
@@ -66,6 +57,7 @@ public class PushServiceImpl implements PushService {
 
     // 构造Message并发送
     Message message = Message.buildPush(pushMessage);
+    log.info(">>>   向客户端[{}]推送id为[{}]的消息   <<<", clientID, messageID);
 
     server.push(message);
   }

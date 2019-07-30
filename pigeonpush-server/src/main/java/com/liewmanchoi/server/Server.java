@@ -15,6 +15,7 @@ import com.liewmanchoi.service.ACKService;
 import com.liewmanchoi.service.AuthService;
 import com.liewmanchoi.service.RegisterService;
 import com.liewmanchoi.service.RouteService;
+import com.liewmanchoi.util.IpUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFuture;
@@ -25,8 +26,8 @@ import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.timeout.IdleStateHandler;
@@ -65,9 +66,11 @@ public class Server {
   private EventLoopGroup workerGroup;
   private ChannelFuture future;
   /** 通道关系表 */
-  private Map<String, NioSocketChannel> channelMap;
+  private Map<String, SocketChannel> channelMap;
   /** 编解码器 */
   private ProtostuffSerializer serializer;
+  /** 本机ip地址 */
+  private String ipAddress;
 
   @PostConstruct
   public void start() {
@@ -79,6 +82,7 @@ public class Server {
             : new NioEventLoopGroup(serverConfig.getIoThreads());
     channelMap = new ConcurrentHashMap<>(10000);
     serializer = new ProtostuffSerializer();
+    ipAddress = getIpAddress();
 
     ServerBootstrap bootstrap = new ServerBootstrap();
     bootstrap
@@ -97,13 +101,14 @@ public class Server {
     log.info("服务器绑定端口[{}]", serverConfig.getPort());
 
     // 向Zookeeper集群注册服务器
-    registerService.register();
+    registerService.register(ipAddress, future.channel().eventLoop());
+
   }
 
-  private ChannelInitializer<NioSocketChannel> initPipeline() {
-    return new ChannelInitializer<NioSocketChannel>() {
+  private ChannelInitializer<SocketChannel> initPipeline() {
+    return new ChannelInitializer<SocketChannel>() {
       @Override
-      protected void initChannel(NioSocketChannel ch) {
+      protected void initChannel(SocketChannel ch) {
         ch.pipeline()
             .addLast(
                 "IdleStateHandler",
@@ -139,8 +144,20 @@ public class Server {
     return authService.checkToken(clientID, token);
   }
 
+  private String getIpAddress() {
+    String address;
+    if (serverConfig.getAddress() != null) {
+      address = serverConfig.getAddress();
+    } else {
+      address = IpUtil.getLocalAddress().getHostAddress();
+    }
+
+    return address;
+  }
+
   /** 在收到SDK发送的PING消息时，远程调用delivery模块的pullMessage方法，拉取未确认消息 */
   public void acceptPullRequest(String clientID) {
+    log.info(">>>   开启远程调用PullService#pullMessage，拉取客户端[{}]的待确认消息   <<<", clientID);
     pullService.pullMessage(clientID);
   }
 
@@ -149,10 +166,11 @@ public class Server {
       return;
     }
 
+    log.info(">>>   处理消息确认ACK请求   <<<");
     ackService.handleACK(clientID, messageID);
   }
 
-  public void afterEstablishConnection(String clientID, NioSocketChannel channel) {
+  public void afterEstablishConnection(String clientID, SocketChannel channel) {
     // 连接建立后，需要完成下列步骤
     // 1. 增加通道关系
     channelMap.put(clientID, channel);
@@ -163,20 +181,20 @@ public class Server {
   }
 
   /** 关闭clientID对应的连接并清理相应表项 */
-  public void shutdownConnection(String clientID) {
+  public void closeConnection(String clientID) {
     // 关闭对应的长连接，需要完成以下步骤
-    // 1. 关闭channel
-    NioSocketChannel channel = channelMap.get(clientID);
-    if (channel != null && channel.isActive()) {
-      channel.shutdown();
+    // 1. 删除token表的密钥
+    authService.removeToken(clientID);
+    // 2. 删除路由表表项
+    routeService.removeRoute(clientID);
+    // 3. 删除通道关系表表项
+    channelMap.remove(clientID);
+    // 4. 关闭channel
+    SocketChannel channel = channelMap.get(clientID);
+    if (channel != null && channel.isOpen()) {
+      channel.close().syncUninterruptibly();
       log.info(">>>   关闭与[{}]的连接   <<<", clientID);
     }
-    // 2. 删除token表的密钥
-    authService.removeToken(clientID);
-    // 3. 删除路由表表项
-    routeService.removeRoute(clientID);
-    // 4. 删除通道关系表表项
-    channelMap.remove(clientID);
 
     log.info(">>>   连接关闭后的清理工作完成   <<<");
   }
@@ -192,11 +210,11 @@ public class Server {
     }
 
     final String clientID = message.getClientId();
-    final NioSocketChannel channel = channelMap.get(clientID);
+    final SocketChannel channel = channelMap.get(clientID);
     if (channel == null || !channel.isActive()) {
       // 如果连接状态错误，关闭连接
       log.warn(">>>   与客户端[{}]的连接错误   <<<", clientID);
-      shutdownConnection(clientID);
+      closeConnection(clientID);
       // 回收Message对象
       message.recycle();
       return;
@@ -219,7 +237,7 @@ public class Server {
     }
 
     if (future != null) {
-      future.channel().close();
+      future.channel().close().syncUninterruptibly();
     }
 
     log.info(">>>   推送服务器关闭   <<<");

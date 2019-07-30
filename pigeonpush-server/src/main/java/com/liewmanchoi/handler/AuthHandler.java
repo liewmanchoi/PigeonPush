@@ -5,7 +5,7 @@ import com.liewmanchoi.server.Server;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.channel.socket.SocketChannel;
 import io.netty.util.Attribute;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,21 +30,20 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
     Message message = (Message) msg;
     String clientID = message.getClientId();
 
-    NioSocketChannel channel = (NioSocketChannel) ctx.channel();
+    SocketChannel channel = (SocketChannel) ctx.channel();
 
     // 如果消息不是AUTH_REQ类型，直接关闭连接
     if (message.getType() != Message.AUTH_REQ) {
       log.warn(">>>   没有收到客户端[{}]发送的鉴权消息，连接将关闭 <<<", clientID);
-      channel.close();
+      channel.close().syncUninterruptibly();
     } else {
 
       String token = message.getToken();
 
       if (!server.checkToken(clientID, token)) {
         // 如果鉴权不通过，直接关闭连接
-
-        log.warn(">>>   客户端[{}]鉴权未通过，连接将关闭 <<<", clientID);
-        channel.close();
+        channel.close().syncUninterruptibly();
+        log.warn(">>>   客户端[{}]鉴权未通过，连接已关闭 <<<", clientID);
       } else {
         log.info(">>>   客户端[{}]鉴权通过 <<<", clientID);
 
@@ -58,9 +57,6 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
         log.info(">>>   删除鉴权拦截器 <<<");
       }
     }
-
-    // 回收Message
-    message.recycle();
 
     super.channelRead(ctx, msg);
   }

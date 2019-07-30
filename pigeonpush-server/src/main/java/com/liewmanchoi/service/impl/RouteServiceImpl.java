@@ -16,7 +16,7 @@ public class RouteServiceImpl implements RouteService {
 
   @Override
   public void addRoute(String clientID) {
-    String socketAddress = IpUtil.getLocalAddress().toString();
+    String socketAddress = IpUtil.getIp();
     redisDAO.addRoute(clientID, socketAddress);
   }
 
