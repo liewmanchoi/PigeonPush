@@ -247,7 +247,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <protostuff.version>1.5.9</protostuff.version>
     <slf4j-api.version>1.7.26</slf4j-api.version>
-    <spring.version>5.1.5.RELEASE</spring.version>
+    <spring.version>5.2.22.RELEASE</spring.version>
     <swagger.version>2.5.0</swagger.version>
     <jackson.version>2.9.8</jackson.version>
   </properties>
